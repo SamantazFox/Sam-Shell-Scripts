@@ -1,0 +1,63 @@
+#!/bin/bash
+#
+# bak / unbak
+#
+# Save a file/directory by simply copy/pasting it and appending
+# the '.bak' extension. 'unbak' does the opposite (i.e restore
+# the file or directory)
+#
+# Copyright 2018 (c) Samantaz
+#
+
+
+function bak {
+	# Parse command line arguments
+	for arg in "$@"; do
+		case $arg in
+			-[U|u]* ) unbak;;
+			-[T|t]* ) time="@${date +%F_%H-%M}";;
+			*) path="$arg";;
+		esac
+	done
+
+	# Backup the file/directory (copy it and append ".bak")
+	if [[ -d "$path" ]]; then
+		cp -R "$path" "${path%/*}${time}.bak";
+		echo "$path -> ${path%/*}${time}.bak";
+	else
+		cp "$path" "$path${time}.bak";
+		echo "$path -> $path${time}.bak";
+	fi
+}
+
+
+# Restore a file previously saved with 'bak'
+function unbak {
+	# retrieve file/path from arguments
+	path="$1"
+
+	# Check if user gave us a file with .bak extension
+	if [[ ${path##*.} == "bak" ]]; then
+		tested=${path%bak};
+	else
+		tested=$path;
+	fi
+
+	# If file exists, ask user first
+	if [[ -e $tested ]]; then
+		# Loop question until user give Y/y or N/n as answer
+		while read -p "File exists. Replace? (Yes/No) " answer;
+		do
+			case $answer in
+				[yY]* )
+					mv "$tested.bak" "$tested">/dev/null;
+					echo "Done."; break;;
+				[nN]* ) break;;
+			esac
+		done
+	else
+		mv "$tested.bak" "$tested" >/dev/null;
+	fi
+
+	# TODO: add logic to detect backups made with the -t option
+}
