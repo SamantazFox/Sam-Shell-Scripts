@@ -1,4 +1,5 @@
 # Ignore anything, except rules below
+*.*
 
 # git stuff
 .git
