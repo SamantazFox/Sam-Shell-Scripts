@@ -1,0 +1,9 @@
+# Ignore anything, except rules below
+
+# git stuff
+.git
+!.gitignore
+!*.md
+
+# Accept only .sh files
+!*.sh
