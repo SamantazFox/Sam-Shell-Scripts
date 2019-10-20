@@ -1,0 +1,39 @@
+#!/bin/sh
+#
+# apk-extract
+#
+# Extracts the content of an Android APK file
+#
+# Copyright 2019 (c) Samantaz
+#
+
+
+function apk-extract
+{
+	apkfile=`basename $1 .apk`
+	zipfile="${apkfile}.zip"
+	destdir="${1%%.apk}"
+
+	echo "Creating temporary directory..."
+	workdir=`mktemp -d --tmpdir apk_extract_XXXXXXXX`
+	[ -d $workdir ] || (echo "Error creating temporary directory. Aborting." &&	return 1)
+
+	echo "Copying source APK file..."
+	cp $1 $workdir/$zipfile
+	chmod 660 $workdir/$zipfile
+
+	echo "Extracting apk..."
+	unzip -t $workdir/$zipfile >/dev/null 2>&1 || (echo "Corrupted APK file! Aborting." && return 1)
+	unzip $workdir/$zipfile -d $workdir | sed -e "s|$workdir/\?||"
+	rm $workdir/$zipfile
+
+	echo "Moving resulting data..."
+	[ -z $destdir ] && echo "Empty destination directory. Cannot move data." && return 1
+	[ -d $destdir ] && echo "Destination \"$destdir\" exists. Can't move data." && return 1
+	mv $workdir $destdir
+
+	if [ -d $workdir ]; then
+		echo "Cleaning up temporary files..."
+		rm -r $workdir
+	fi
+}
