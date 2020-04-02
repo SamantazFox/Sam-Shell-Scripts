@@ -15,7 +15,7 @@ add the following code snippet to the user's `.bashrc`:
 # Source the different functions contained in scripts.d
 # Update $SCRIPTS_DIR according to the path where the scripts.d folder is.
 #
-SCRIPTS_DIR=~/scripts.d
+SCRIPTS_DIR=~/.local/bin/scripts.d
 
 for fn in `ls $SCRIPTS_DIR/scripts.d/`; do
 	. $SCRIPTS_DIR/scripts.d/$fn
