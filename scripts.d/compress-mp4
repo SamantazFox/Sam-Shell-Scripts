@@ -1,0 +1,21 @@
+#!/bin/sh
+#
+# compress-mp4
+#
+# Compresses the MP4 video(s) given in argument
+#
+# Copyright 2020 (c) Samantaz
+#
+
+
+function compress-mp4
+{
+	for video in $@
+	do
+		ffmpeg -hide_banner \
+			-loglevel warning \
+			-i "${video}" \
+			-vcodec h264 -acodec aac \
+			"$(basename $1 .mp4)-compressed.mp4"
+	done
+}
