@@ -5,7 +5,7 @@
 # Download from YT directly to mp3
 # Requires 'youtube-dl'
 #
-# Copyright 2018 (c) Samantaz
+# Copyright 2018-2020 (c) Samantaz
 #
 
 
@@ -17,7 +17,7 @@ function yt-mp3
 	~/.local/bin/youtube-dl \
 		-x --audio-format mp3 --audio-quality 320K \
 		--embed-thumbnail --metadata-from-title "%(artist)s - %(title)s" \
-		--output "%(title)s.%(ext)s" "$1";
+		--output "%(title)s.%(ext)s" $@;
 
 	cd $oldpath
 }
