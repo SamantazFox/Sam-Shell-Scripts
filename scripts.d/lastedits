@@ -4,7 +4,7 @@
 #
 # Sort files of a given directory by their last edit time (newer first)
 #
-# Copyright 2018 (c) Samantaz
+# Copyright 2018-2020 (c) Samantaz
 #
 
 
@@ -23,7 +23,7 @@ function lastedits
 	fi
 
 	# Initialize variables
-	type="f"; path="";
+	type="f"; srchpath="";
 	format='%TY/%Tm/%Td  %TH:%TM:%.2TS';
 
 	# Parse command line arguments
@@ -32,14 +32,14 @@ function lastedits
 			-f ) type="f";;
 			-d ) type="d";;
 			-l ) type="l";;
-			*) path="$arg";;
+			*) srchpath="$arg";;
 		esac
 	done
 
 	# Display the result
 	if [[ $type == "f" || $type == "l" ]]; then
-		find "$path" -type "$type" -printf "${format}  %P\n" | sort -r | head -n 20;
+		find "$srchpath" -type "$type" -printf "${format}  %P\n" | sort -r | head -n 20;
 	elif [[ $type == "d" ]]; then
-		find "$path" -type "$type" -printf "${format}  ./%P\n" | sort -r | head -n 20;
+		find "$srchpath" -type "$type" -printf "${format}  ./%P\n" | sort -r | head -n 20;
 	fi
 }
