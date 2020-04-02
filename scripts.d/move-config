@@ -1,0 +1,26 @@
+
+
+function move-config
+{
+	pushd > /dev/null
+	cd $HOME
+
+	fname=$(basename $1 | sed -E 's/^\.//')
+
+	if [ -e $1 ]; then
+		if [ -h $1 ]; then
+			echo "$1 is already a symlink. Aborting."
+
+		elif [ -e .config/${fname} ]; then
+			echo "Destination already exists. Aborting."
+
+		else
+			mv $1 .config/${fname}
+			ln -s .config/${fname} $1
+		fi
+	else
+		echo "$1 does not exist. Nothing to do."
+	fi
+
+	popd > /dev/null
+}
