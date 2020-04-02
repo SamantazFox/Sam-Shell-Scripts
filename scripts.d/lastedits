@@ -11,7 +11,7 @@
 function lastedits
 {
 	# Show help if no args given
-	if [ $# -le 1 ]; then
+	if $(test $# -eq 0); then
 		echo "Lists the 20 most recently modified files/folders/symlinks at a given path"
 		echo
 		echo "Usage:"
