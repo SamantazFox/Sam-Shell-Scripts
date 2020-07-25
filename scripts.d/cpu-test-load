@@ -1,0 +1,35 @@
+#!/bin/sh
+#
+# cpu-test-load
+#
+# Starts N shell processes for X seconds
+# This allows to stress test a CPU
+#
+# Copyright 2012 (c) jlliagre @ superuser
+# https://superuser.com/a/443633
+#
+
+
+function cpu-test-load
+{
+  (
+    # Usage: cpu-test-load <core_count> [seconds]
+    cpus=${1:-1}
+    secs=${2:-60}
+
+    # Keep the list of process IDs to kill at the end
+    pids=""
+
+    # Create a traop that will auto-kill all stored PIDs
+    echo "Loading $cpus cores for $secs seconds..."
+    trap 'for p in $pids; do kill $p; done' 0
+
+    # Run infinite loop shell processes
+    for (( i=0; i<cpus; i++ )); do
+      while :; do :; done & pids="$pids $!"
+    done
+
+    # Wait for x seconds, the trap will do the rest
+    sleep $secs
+  )
+}

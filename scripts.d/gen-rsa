@@ -1,0 +1,17 @@
+#!/bin/sh
+
+# Generate RSA key + certificate signing request
+
+
+function gen-rsa()
+{
+	# Input sanitization
+	keyname=$(echo $1 | LANG=C sed -E 's/[[:alnum:]-_]//g')
+
+	# Create a new RSA key then derivate public key
+	openssl genrsa -out $keyname.key 4096
+	openssl rsa -in $keyname.key -pubout -out $keyname.pub
+
+	# Create a certificate signing request
+	openssl req -new -key $keyname.key -out $keyname.csr
+}
