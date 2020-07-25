@@ -1,0 +1,97 @@
+#!/bin/bash
+#
+# mount-iso / umount-iso
+#
+# Allow a users to easily mount/unmount iso images.
+# if available, use FUSE (fuseiso), otherwise use mount
+#
+# Copyright 2020 (c) Samantaz
+#
+
+
+function mount-iso
+{
+	# Replace chars not mathing one of: A-Z a-z 0-9 () - . with '_'
+	# Remove the extension (either .iso or .img)
+	isoname=$(basename "$1" | sed -E -e 's/[^[[:alnum:]].()-]+/_/g; s/\.(img|iso)$//')
+
+	{
+		# User is root
+		if $(test $UID -eq 0)
+		then
+
+			# Craft the mounting point path
+			mountpoint="/mnt/${isoname}"
+			[ -d "${mountpoint}" ] || mkdir "${mountpoint}"
+
+			echo "Mounting ${isoname} ..."
+
+			mount -o loop "$1" "${mountpoint}"
+
+		# User is not root
+		else
+
+			# Craft the mounting point path
+			mountpoint="/media/$(whoami)/${isoname}"
+			[ -d "${mountpoint}" ] || mkdir -p "${mountpoint}"
+
+			echo "Mounting ${isoname} ..."
+
+			# Use fuseiso if available, or fallback to mount
+			if $(test -e /usr/bin/fuseiso -o -e /bin/fuseiso)
+			then
+				fuseiso -p "$1" "${mountpoint}"
+			else
+				mount -o loop "$1" "${mountpoint}"
+				#|| sudo mount -o loop "$1" "${mountpoint}"
+			fi
+		fi
+
+	} || {
+		echo "Failed";
+		rmdir "${mountpoint}" > /dev/null
+		return 1
+	}
+
+	# Show something to the user if we succeed
+	echo "Mounted at: ${mountpoint}"
+}
+
+
+function umount-iso
+{
+	# Replace chars not mathing one of: A-Z a-z 0-9 () - . with '_'
+	# Remove the extension (either .iso or .img)
+	isoname=$(basename "$1" | sed -E -e 's/[^[[:alnum:]].()-]+/_/g; s/\.(img|iso)$//')
+
+	echo "Un-mounting ${isoname} ..."
+
+	# When user is root
+	if $(test $UID -eq 0)
+	then
+
+		# Craft the mounting point path, and make sure it exists
+		mountpoint="/mnt/${isoname}"
+		[ -d "${mountpoint}" ] || ( echo "nothing to unmount"; return 0 )
+
+		umount "${mountpoint}"
+
+	# When user is not root
+	else
+
+		# Craft the mounting point path, and make sure it exists
+		mountpoint="/media/$(whoami)/${isoname}"
+		[ -d "${mountpoint}" ] || ( echo "nothing to unmount"; return 0 )
+
+		# check availability of fusermount command
+		if $(test -e /usr/bin/fusermount -o -e /bin/fusermount)
+		then
+			fusermount -u "${mountpoint}"
+		else
+			umount "${mountpoint}" #|| sudo umount "${mountpoint}"
+		fi
+	fi
+
+	# Remove mountpoint
+	rmdir "${mountpoint}"
+}

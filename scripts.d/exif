@@ -1,0 +1,25 @@
+#!/bin/bash
+#
+# exif
+#
+# Exif data related commands
+# Based on imagemagick' mogrify and on the "exif" tool
+#
+# Copyright 2019 (c) Samantaz
+#
+
+
+function exif
+{
+	if [[ "$1" == "show" ]]; then
+		# Print the content of the exif metadata
+		/usr/bin/exif "$2";
+	elif [[ "$1" == "rm" ]]; then
+		# Remove exif metadatas
+		mogrify -strip "$2";
+	else
+		echo "Usage:"
+		echo "exif show <file>      show the EXIF data contained in <file>"
+		echo "exif rm <file>        deletes all the EXIF data in <file>"
+	fi
+}

@@ -8,3 +8,7 @@
 
 # Accept only .sh files
 !*.sh
+
+# Accept content of scripts.d
+!scripts.d/
+!scripts.d/*

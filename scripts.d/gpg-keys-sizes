@@ -1,0 +1,27 @@
+#!/bin/sh
+#
+# gpg-keys-size
+#
+# Gives the space (in octets) used in the keyring for each certificate present
+# in the keyring. the output will look like this:
+#
+#   1479581    keyid: 06EAA066E397832F
+#   1735309    keyid: F7F0E70F307D56ED
+#   3368272    keyid: 9710B89BCA57AD7C
+#
+# Credits goes to 'dkg' on GNUpg bugs: 
+# https://dev.gnupg.org/T3972#127297
+#
+
+
+function gpg-keys-size()
+{
+	gpg --export | \
+	gpg --list-packets | \
+	awk -F= -v oldoff=-1 -v keyid=unset '
+		/^# off=/{ off = $2 + 0 }
+		/^:public key/{ if (oldoff>-1) { print (off - oldoff) " " keyid }; oldoff = off; keyid = "unset"; }
+		/keyid:/ {if (keyid == "unset") { keyid = $1; } }
+		END { print (off - oldoff) " " keyid ; };' | \
+	sort -n
+}

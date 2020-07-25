@@ -1,0 +1,30 @@
+#!/bin/bash
+#
+# chksums
+#
+# Print with a nice format the sha256/512 and md5 checksums for
+# the file given as argument
+#
+# Copyright 2018 (c) Samantaz
+#
+
+
+function chksums
+{
+	if [[ -e $1 ]]; then
+		echo "File: $1"
+		
+		# MD5
+		tmp=`md5sum "$1"`
+		printf "[md5sum] " && echo ${tmp:00:32}
+		
+		# SHA256
+		tmp=`sha256sum "$1"`
+		printf "[sha256] " && echo ${tmp:00:64}
+		
+		# SHA512
+		tmp=`sha512sum "$1"`
+		printf "[sha512] " && echo ${tmp:00:64}
+		printf "         " && echo ${tmp:64:64}
+	fi
+}

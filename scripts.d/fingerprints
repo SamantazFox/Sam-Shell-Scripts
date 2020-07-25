@@ -1,0 +1,36 @@
+#!/bin/bash
+#
+# ssh-fingerprint
+#
+# Print the ssh key fingerprint (md5 or sha256)
+#
+# Copyright 2018 (c) Samantaz
+#
+
+
+function ssh-fingerprint
+{
+	# Detect wanted fingerprint
+	case "$1" in
+		md5) fgp="md5";;
+		?(sha)256) fgp="sha256";;
+		?(sha)512) fgp="sha512";;
+		*) fgp="none";;
+	esac
+
+	# Run 'ssh-keygen' if possible
+	if ! [[ "$fgp" == "none" ]]; then
+		# Make sure file exists
+		if [[ -e "$2" ]]; then
+			ssh-keygen -E $fgp -lf "$2";
+		else
+			echo "Error: \"$2\" unknown file."
+		fi
+
+	else
+		echo "Usage:"
+		echo "ssh-fingerprint md5 <key>"
+		echo "ssh-fingerprint [256|sha256] <key>"
+		echo "ssh-fingerprint [512|sha512] <key>"
+	fi
+}

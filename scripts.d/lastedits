@@ -1,0 +1,45 @@
+#!/bin/bash
+#
+# lastedits
+#
+# Sort files of a given directory by their last edit time (newer first)
+#
+# Copyright 2018-2020 (c) Samantaz
+#
+
+
+function lastedits
+{
+	# Show help if no args given
+	if $(test $# -eq 0); then
+		echo "Lists the 20 most recently modified files/folders/symlinks at a given path"
+		echo
+		echo "Usage:"
+		echo "lastedits -f <path>      only list standard files"
+		echo "lastedits -d <path>      only list directories"
+		echo "lastedits -l <path>      only list symlinks"
+		echo "lastedits <path>         list everything, independantly of their type"
+		return
+	fi
+
+	# Initialize variables
+	type="f"; srchpath="";
+	format='%TY/%Tm/%Td  %TH:%TM:%.2TS';
+
+	# Parse command line arguments
+	for arg in "$@"; do
+		case $arg in
+			-f ) type="f";;
+			-d ) type="d";;
+			-l ) type="l";;
+			*) srchpath="$arg";;
+		esac
+	done
+
+	# Display the result
+	if [[ $type == "f" || $type == "l" ]]; then
+		find "$srchpath" -type "$type" -printf "${format}  %P\n" | sort -r | head -n 20;
+	elif [[ $type == "d" ]]; then
+		find "$srchpath" -type "$type" -printf "${format}  ./%P\n" | sort -r | head -n 20;
+	fi
+}
