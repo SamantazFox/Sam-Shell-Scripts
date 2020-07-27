@@ -24,5 +24,13 @@ done
 unset SCRIPTS_DIR
 ```
 
-Warning: These scripts have only been tested on `bash`. It is not guaranteed
-that they'll be compatible with `zsh` or any other shell.
+Warning: These scripts have been tested on `bash` and `zsh`. It is not guaranteed
+that they'll be compatible other shells.
+
+
+License
+-------
+
+This repo's content is released under the BSD 3-clauses licenses.
+
+Read the [LICENSE](LICENSE.md) file for more infos.
