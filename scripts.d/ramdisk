@@ -15,12 +15,15 @@ function ramdisk()
 	#test $EUID -eq 0 || { echo "This script needs root privileges"; return; }
 
 	# Configuration
-	#
 	rd_dir="/mnt/ramdisk"
 	name="ramdisk"
 
-	lower=512
-	upper=8192
+	# Define lower and upper limits
+	# Upper limit is extracted from /proc/meminfo and leaves 256 MiB for the system
+	lower=64
+	tmp_upper=$(sed -rn 's/^MemAvailable:\s+([0-9]+)\skB$/\1/p' /proc/meminfo)
+	upper=$(( ($tmp_upper / 1024) - 256 ))
+
 
 	# If ramdisk directory does not exist, create it
 	if ! [ -d $rd_dir ]; then mkdir $rd_dir; fi
@@ -42,7 +45,7 @@ function ramdisk()
 	else
 
 		# Ask user for the ramdisk's size
-		printf "Please enter a size (in MiB): "
+		printf "Please enter a size in MiB [$lower - $upper]: "
 		read answer && echo
 
 		# Make basic boundaries checks before creating the disk
