@@ -47,8 +47,8 @@ fi
 
 # Display data + logo
 i=0
-for x in $logo; do
+for x in ${logo[@]}; do
 	if [[ $i -ge 1 ]]; then str="${os_specs[$i]}"; else str=""; fi
-	echo "${x}${str}"
+	printf "${x}${str}\n"
 	i=$(( i+1 ))
 done

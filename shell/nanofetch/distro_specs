@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/bin/sh
 
 #
 # Distro name
@@ -33,6 +33,7 @@ IFS=$'\n'
 
 # Kernel version
 kernel="$(uname -m) $(uname -sr)"
+
 
 # Memory informations
 meminfo=( $(sed -nE '
@@ -86,6 +87,7 @@ disks_total=${disks_raw[-5]}
 disks_used=${disks_raw[-4]}
 disks_avail=${disks_raw[-3]}
 
+
 if [ -e /bin/glxinfo ] || [ -e /usr/bin/glxinfo ]
 then
 	IFS=$'\n' glxinfo=( $( glxinfo -B | sed -nE "
@@ -120,4 +122,3 @@ else
 	# Prefer external gpu
 	gpu="${gpu_ext:-gpu_int}"
 fi
-
