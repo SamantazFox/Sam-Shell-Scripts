@@ -1,14 +1,15 @@
-# Ignore anything, except rules below
-*.*
-
 # git stuff
 .git
-!.gitignore
-!*.md
+.gitignore
 
-# Accept only .sh files
-!*.sh
+# Accept only content of scripts.d/, shell/ and admin/
+**/
 
-# Accept content of scripts.d
 !scripts.d/
 !scripts.d/*
+
+!shell/
+!shell/*
+
+!admin/
+!admin/*
