@@ -13,8 +13,8 @@ function ssh-fingerprint
 	# Detect wanted fingerprint
 	case "$1" in
 		md5) fgp="md5";;
-		?(sha)256) fgp="sha256";;
-		?(sha)512) fgp="sha512";;
+		256|sha256) fgp="sha256";;
+		512|sha512) fgp="sha512";;
 		*) fgp="none";;
 	esac
 
