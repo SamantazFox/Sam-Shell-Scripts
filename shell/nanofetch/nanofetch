@@ -1,0 +1,54 @@
+#!/bin/zsh
+
+# Get this script's dir in order to be able to
+# use relative paths
+mydir=${0%/*}
+
+
+# Import color definitions
+. $mydir/../colors
+
+# Get OS details
+. $mydir/distro_specs
+
+# import logos
+. $mydir/logo_tux
+. $mydir/logo_fox
+
+
+#
+# Text
+#
+
+bg="${STYLE_BOLD}${COLOR_FG_GREY}";
+n="${COLOR_NONE}";
+
+os_specs=(
+"${bg}OS:${n} ${distro}"
+"${bg}Kernel${n} ${kernel}"
+"${bg}Shell:${n} ${shell}"
+"${bg}Disk:${n} ${disks_used} / ${disks_total} [${disks_avail} free]"
+"${bg}CPU:${n} ${cpu_name} @ ${cpu_threads}x ${cpu_freq}GHz"
+"${bg}GPU:${n} ${gpu}"
+"${bg}RAM:${n} ${mem_free_mb}MB / ${mem_total_mb}MB"
+)
+
+
+# Change separator to neline
+IFS=$'\n'
+
+# Random selection of logo to use
+if $(test $(( $RANDOM % 2 )) -eq 1)
+then
+	logo=( ${fox_logo[@]} )
+else
+	logo=( ${tux_logo[@]} )
+fi
+
+# Display data + logo
+i=0
+for x in $logo; do
+	if [[ $i -ge 1 ]]; then str="${os_specs[$i]}"; else str=""; fi
+	echo "${x}${str}"
+	i=$(( i+1 ))
+done

@@ -1,0 +1,20 @@
+#!/bin/sh
+#
+# Fox logo
+#
+
+f="${COLOR_FG_BROWN}";
+w="${COLOR_FG_WHITE}";
+b="${COLOR_FG_LBLUE}";
+g="${COLOR_FG_GREY}";
+
+fox_logo=(
+"${w}                    "
+"${w}   /\   /\          "
+"${f}  //\\\\\\\\_//\\\\\\\\ ${w}  ___   "
+"${f}  \_'''''_/ ${w} /  /   "
+"${f}   / ${b}* ${b}*${f} \  (${w}^^^${f})   "
+"${f}   \_\./_/  |   \   "
+"${f}     / ^    /   /   "
+"${g} Art by Todd Vargo  "
+)
