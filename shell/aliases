@@ -1,0 +1,166 @@
+#################################################
+###                                           ###
+###                  Aliases                  ###
+###                                           ###
+#################################################
+
+# Todo: find a way to detect mingw
+is_mingw=0 #$()
+
+# =======================================
+#  Terminal
+# =======================================
+
+alias cls='clear'
+alias clc='clear'
+
+
+# =======================================
+#  Directory & file management
+# =======================================
+
+# Use '-A' instead of '-a' on windows
+if $(test $is_mingw -eq 1)
+then
+	__LS_ALL_FLAG='-A'
+else
+	__LS_ALL_FLAG='-a'
+fi
+
+# Interactive operation...
+#alias rm='rm -i'
+#alias cp='cp -i'
+#alias mv='mv -i'
+
+# Base alias for 'ls'
+alias ls='ls --color -xp -N -h'
+#alias ls='ls -hF --color=tty'  ????
+
+# Aliases for 'ls' (colored, default)
+alias lsl='ls -l'
+alias lsa="ls ${__LS_ALL_FLAG}"
+alias lsr='ls -R -I=.git'
+alias lsla='lsa -l'
+alias lslr='lsr -l'
+
+# Aliases for 'ls' (non-colored)
+alias ls-nc='ls --color=none'
+alias lsa-nc='lsa --color=none'
+alias lsl-nc='lsl --color=none'
+alias lsr-nc='lsr --color=none'
+alias lsla-nc='lsla --color=none'
+alias lslr-nc='lslr --color=none'
+
+# Advanced copy using rsync
+alias cp+='rsync --progress'
+alias cpr+='rsync -r --progress'
+alias mv+='rsync --progress --remove-source-files'
+alias mvr+='rsync -r --progress --remove-source-files'
+
+# Make directory and cd to it
+function mkcd { mkdir "$1" && cd "$1"; }
+
+# Move to directory and list it's content
+function cdls { cd "$1" && ls; }
+function cdlsl { cd "$1" && lsl; }
+function cdlsla { cd "$1" && lsla; }
+
+
+# =======================================
+#  Syslog aliases & functions
+# =======================================
+
+# Syslog live monitoring
+alias syslog='tail -f /var/log/syslog'
+alias slog='syslog'
+
+# Syslog review using vim
+alias visyslog='vim -R + /var/log/syslog'
+alias vslog='visyslog'
+
+
+# =======================================
+#  Utility programs
+# =======================================
+
+# Cygwin package management
+if (test $is_mingw -eq 1); then
+	alias pacman='/cygdrive/d/Programs/cygwin64/cygwin.bat &'
+fi
+
+# Replacement for deprecated nslookup (linux only)
+if $(test $is_mingw -eq 0); then
+	alias nslookup='host'
+fi
+
+# Make alias (Windows)
+if $(test $is_mingw -eq 1); then
+	alias make="mingw32-make.exe"
+fi
+
+
+# =======================================
+#  Git aliases & functions
+# =======================================
+
+# Logs display
+alias gitlog='git log --graph --oneline --abbrev-commit'
+alias gitlog-all='git log --all --graph --oneline --abbrev-commit'
+
+alias git-lga='git log --all --oneline --graph'
+alias git-gla='git log --all --oneline --graph'
+
+# Show last diff / commit
+alias git-sld='git log -p HEAD'
+alias git-slc='git show HEAD --stat'
+
+# Check patch syntax
+alias git-check-patch='git apply --check --verbose'
+
+function git-show-stats()
+{
+	git log --shortstat | \
+	grep -E "fil(e|es) changed" | \
+	awk '{files+=$1; inserted+=$4; deleted+=$6; delta+=$4-$6; ratio=deleted/inserted} \
+	END {printf "Commit stats:\n- Files changed (total)..  %s\n- Lines added (total)....  %s\n- Lines deleted (total)..  %s\n- Total lines (delta)....  %s\n- Add./Del. ratio (1:n)..  1 : %s\n", files, inserted, deleted, delta, ratio }' -
+}
+
+# Open git diff in editor
+function git-dte {
+	tmp=$(tempfile -d /tmp)
+	git diff $@ > $tmp
+	$EDITOR --wait $tmp
+	rm $tmp
+}
+
+
+# =======================================
+#  Objdump aliases
+# =======================================
+
+# Linux
+alias objdmp='objdump -M intel'
+alias objdmp-hdr='objdmp -a -f -h'
+alias objdmp-asm='objdmp --disassemble-all'
+
+# Windows / MinGW
+alias objdmp-win='x86_64-w64-mingw32-objdump -M intel'
+alias objdmp-win-hdr='objdmp-win -a -f -h'
+alias objdmp-win-asm='objdmp-win --disassemble-all'
+
+
+# =======================================
+#  Miscellanous
+# =======================================
+
+# Same as `df -h`, but without the annoying stuff (tmpfs)
+alias dfh='df -h | grep -v "tmpfs"'
+
+# list extended HDD infos
+alias lsblk+='lsblk -o NAME,SIZE,FSTYPE,LABEL,RO,STATE,UUID,MOUNTPOINT -a'
+
+# End of the world !!! (integer overflow)
+alias endoftheworld='date --date=@$(concalc 2 ^ 31 - 1)'
+
+# List (and counts) the commands you use the most often
+alias most-used-cmds='sort $HISTFILE | grep -oE '\''^(?!:\s*\d+\s+)?(\w+)'\'' | uniq -c | sort -nr | head -n 15'
