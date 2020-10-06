@@ -29,6 +29,7 @@ Other requirements:
  * the `sudo` utility
  * GNU `wget`
  * `scripts.d/apk-extract` requires `unzip`
+ * `scripts.d/clipboard-convert` requires `gzip`, `xclip` and [barrier](https://github.com/debauchee/barrier)
  * `scripts.d/compress-mp4` requires `ffmpeg`
  * `scripts.d/exif` requires ImageMagick's `mogrify` and Lutz Mueller's `exif`
  * `scripts.d/gpg-keys-sizes` requires `gpg` and `awk`

@@ -1,0 +1,44 @@
+#!/bin/sh
+#
+# clipboard-convert
+#
+# Convert clipboard content to/from base 64.
+# This sript is intended for use in addition of barrier, a software that
+# permits keyboard, mouse and clipboard sharing across computers.
+#
+# Barrier doesn't support sharing of binary data in the clipboard, hence these
+# two functions. Of course, they're required on every machine, and some
+# .desktop files may be added for convenience.
+#
+# Copyright 2020 (c) Samantaz
+#
+
+
+clip-to-b64()
+{
+	# Get the mimetype associated to the clipboard content
+	type=$(xclip -selection clipboard -o -t TARGETS | sed -n '2p')
+
+	# Get the clipboard's content, gzip it and convert it to base64
+	data=$(xclip -selection clipboard -o | gzip -c - | base64 -)
+
+	# Sanity check
+	if test -z "$type" -o -z "$data"; then return 1; fi
+
+	# Replace clipoard content with its base64 version, preceeded by
+	# it's mimetype on a separate line, so it can be restored later
+	printf "${type}\n${data}\n" | xclip -selection clipboard -i
+}
+
+clip-to-any()
+{
+	# Get the clipboard's content (in base64) and the associated mimetype
+	type=$(xclip -selection clipboard -o | sed -n '1p')
+	data=$(xclip -selection clipboard -o | sed '1d')
+
+	# Sanity check
+	if test -z "$type" -o -z "$data"; then return 1; fi
+
+	# Restore the content (decoded and gunzip'd) with its proper mimetype
+	echo $data | base64 -d - | gunzip -c - | xclip -selection clipboard -i -t $type
+}
