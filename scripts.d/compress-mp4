@@ -16,6 +16,6 @@ function compress-mp4
 			-loglevel warning \
 			-i "${video}" \
 			-vcodec h264 -acodec aac \
-			"$(basename $1 .mp4)-compressed.mp4"
+			"$(basename $video .mp4)-compressed.mp4"
 	done
 }
