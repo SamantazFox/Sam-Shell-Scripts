@@ -24,6 +24,7 @@ bg="${STYLE_BOLD}${COLOR_FG_GREY}";
 n="${COLOR_NONE}";
 
 os_specs=(
+""
 "${bg}OS:${n} ${distro}"
 "${bg}Kernel${n} ${kernel}"
 "${bg}Shell:${n} ${shell}"
@@ -34,7 +35,7 @@ os_specs=(
 )
 
 
-# Change separator to neline
+# Change separator to newline
 IFS=$'\n'
 
 # Random selection of logo to use
@@ -46,9 +47,6 @@ else
 fi
 
 # Display data + logo
-i=0
-for x in ${logo[@]}; do
-	if [[ $i -ge 1 ]]; then str="${os_specs[$i]}"; else str=""; fi
-	printf "${x}${str}\n"
-	i=$(( i+1 ))
+for i in $(seq ${#logo}); do
+	printf "${logo[$i]}${os_specs[$i]}\n"
 done
