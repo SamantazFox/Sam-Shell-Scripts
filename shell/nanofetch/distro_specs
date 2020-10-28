@@ -55,7 +55,7 @@ mem_avail_mb=$(( $mem_avail_kb / 1024 ))
 # CPU informations
 cpuinfo=( $(sed -nE '
 	14q # print only the 14 first lines
-	s/model name\s*:\s+(.+)(APU|CPU).*/\1\2/p
+	s/model name\s*:\s+(.+)(APU|CPU|Processor).*/\1\2/p
 	s/cpu MHz\s+:\s+([0-9]+).*/\1/p
 	s/siblings\s*:\s+([0-9]+)/\1/p
 	s/cpu cores\s*:\s+([0-9]+)/\1/p
