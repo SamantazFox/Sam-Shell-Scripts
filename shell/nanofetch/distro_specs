@@ -118,8 +118,6 @@ then
 		NVIDIA*) gpu="$gpu_vendor $gpu_device";;
 	esac
 else
-	echo x
-
 	# Change IFS to match only newlines in lspci
 	IFS=$'\n' gpu_all=( $( \
 		lspci -mm | sed -nE '/VGA/{ s/(" "| "|" )/|/g; s/"$//p }'
