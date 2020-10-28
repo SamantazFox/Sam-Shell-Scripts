@@ -91,7 +91,7 @@ IFS=$_old_IFS
 
 case $SHELL in
 	*zsh)  shell=$($SHELL --version | sed -E 's/(\(.*\))//');;
-	*bash) shell=$($SHELL --version | sed -E '1q');;
+	*bash) shell=$($SHELL --version | sed -E '1q; s/^GNU (bash), version ([0-9.]+).*$/\1 \2/');;
 	*)     shell="Unknown";;
 esac
 
