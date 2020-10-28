@@ -31,7 +31,7 @@ os_specs=(
 "${bg}Disk:${n} ${disks_used} / ${disks_total} [${disks_avail} free]"
 "${bg}CPU:${n} ${cpu_name} @ ${cpu_threads}x ${cpu_freq}"
 "${bg}GPU:${n} ${gpu}"
-"${bg}RAM:${n} ${mem_free_mb}MB / ${mem_total_mb}MB"
+"${bg}RAM:${n} ${mem_avail_mb}MB / ${mem_total_mb}MB"
 )
 
 
