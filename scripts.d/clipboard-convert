@@ -17,7 +17,20 @@
 clip-to-b64()
 {
 	# Get the mimetype associated to the clipboard content
-	type=$(xclip -selection clipboard -o -t TARGETS | sed -n '2p')
+	# In case of multiple mimetypes, make sure this is not a
+	# text string, then take the first one available
+	type=$(xclip -selection clipboard -o -t TARGETS | sed -n -E '
+		/^TARGETS$/ { n;
+			# Check for the multiple mimetypes case
+			/^MULTIPLE$/ n; /^SAVE_TARGETS$/ { n;
+				# If text string, quit with code 1
+				/^(.*STRING|.*TEXT)$/ q 1
+			}
+			# Get the first mimetype string found
+			/^([A-Za-z]+\/[A-Za-z0-9\-_.]+)/ { p;q }
+			q 2  # If nothing found, quit with code 2
+		}
+	') || return $?
 
 	# Get the clipboard's content, gzip it and convert it to base64
 	data=$(xclip -selection clipboard -o | gzip -c - | base64 -)
