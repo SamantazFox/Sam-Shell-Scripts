@@ -153,8 +153,8 @@ alias objdmp-win-asm='objdmp-win --disassemble-all'
 #  Miscellanous
 # =======================================
 
-# Same as `df -h`, but without the annoying stuff (tmpfs)
-alias dfh='df -h | grep -v "tmpfs"'
+# `df`, but without the annoying stuff (tmpfs)
+alias dfh='df -h -x tmpfs -x devtmpfs'
 
 # list extended HDD infos
 alias lsblk+='lsblk -o NAME,SIZE,FSTYPE,LABEL,RO,STATE,UUID,MOUNTPOINT -a'
