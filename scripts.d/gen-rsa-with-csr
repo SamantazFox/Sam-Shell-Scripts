@@ -3,7 +3,7 @@
 # Generate RSA key + certificate signing request
 
 
-function gen-rsa()
+function gen-rsa-with-csr()
 {
 	# Input sanitization / verification
 	keyname=$(echo $1 | sed -E 's/[^A-Za-z0-9\-_]//g')
