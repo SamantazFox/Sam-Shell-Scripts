@@ -16,31 +16,34 @@
 
 clip-to-b64()
 {
+	set -x
 	# Get the mimetype associated to the clipboard content
 	# In case of multiple mimetypes, make sure this is not a
-	# text string, then take the first one available
-	type=$(xclip -selection clipboard -o -t TARGETS | sed -n -E '
-		/^TARGETS$/ { n;
+	# text string, then take the first one available wich is not text.
+	targets=$(xclip -selection clipboard -o -t TARGETS | sed -n -E '
+		/^TARGETS$/ { p; n;
 			# Check for the multiple mimetypes case
-			/^MULTIPLE$/ n; /^SAVE_TARGETS$/ { n;
+			/^MULTIPLE$/ p; n; /^SAVE_TARGETS$/ { p; n;
 				# If text string, quit with code 1
 				/^(.*STRING|.*TEXT)$/ q 1
+				q # Else quit with no exit code (0)
 			}
-			# Get the first mimetype string found
-			/^([A-Za-z]+\/[A-Za-z0-9\-_.]+)/ { p;q }
 			q 2  # If nothing found, quit with code 2
 		}
 	') || return $?
 
-	# Get the clipboard's content, gzip it and convert it to base64
-	data=$(xclip -selection clipboard -o | gzip -c - | base64 -)
+	mimetype=$(xclip -selection clipboard -o -t TARGETS | \
+		sed -n -E '/^(application|image)\/[A-Za-z0-9\-_.]+/p; q'
+	)
+	if test -z "$mimetype"; then return 1; fi
 
-	# Sanity check
-	if test -z "$type" -o -z "$data"; then return 1; fi
+	# Get the clipboard's content, gzip it and convert it to base64
+	data=$(xclip -selection clipboard -o -t "$mimetype"| gzip -c - | base64 -)
+	if test -z "$data"; then return 1; fi
 
 	# Replace clipoard content with its base64 version, preceeded by
 	# it's mimetype on a separate line, so it can be restored later
-	printf "${type}\n${data}\n" | xclip -selection clipboard -i
+	printf "${mimetype}\n${data}\n" | xclip -selection clipboard -i
 }
 
 clip-to-any()
