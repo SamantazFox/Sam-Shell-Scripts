@@ -5,13 +5,17 @@
 
 function gen-rsa()
 {
-	# Input sanitization
-	keyname=$(echo $1 | LANG=C sed -E 's/[[:alnum:]-_]//g')
+	# Input sanitization / verification
+	keyname=$(echo $1 | sed -E 's/[^A-Za-z0-9\-_]//g')
 
 	# Create a new RSA key then derivate public key
 	openssl genrsa -out $keyname.key 4096
 	openssl rsa -in $keyname.key -pubout -out $keyname.pub
 
 	# Create a certificate signing request
-	openssl req -new -key $keyname.key -out $keyname.csr
+	if ! test -z "$2"; then
+		openssl req -new -key $keyname.key -out $keyname.csr -subj "$2"
+	else
+		openssl req -new -key $keyname.key -out $keyname.csr
+	fi
 }
