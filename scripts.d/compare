@@ -1,0 +1,15 @@
+#!/bin/sh
+#
+# compare
+#
+# Runs diff with unified format (like 'git diff'), and pipes
+# the output to the 'less' pager to no clutter the console.
+#
+# Copyright 2020 (c) Samantaz
+#
+
+
+function compare()
+{
+	diff -U 3 --color=always "$1" "$2" | less -R
+}
