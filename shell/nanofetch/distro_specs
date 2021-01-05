@@ -54,12 +54,17 @@ mem_avail_mb=$(( $mem_avail_kb / 1024 ))
 
 # CPU informations
 cpuinfo=( $(lscpu | sed -nE '
-	s/^CPU\(s\):            \s+([0-9]+)$/\1/p
+	s/^CPU\(s\):\s+([0-9]+)$/\1/p
 	s/^Core\(s\) per socket:\s+([0-9]+)$/\1/p
-	s/^Socket\(s\):         \s+([0-9]+)$/\1/p
-	s/^Vendor ID:           \s+([A-Za-z]+)$/\1/p
-	s/^Model name:          \s+(.+) (APU|CPU|Processor).*$/\1/p
-	s/^CPU max MHz:         \s+([0-9]+).+$/\1/p
+	s/^Socket\(s\):\s+([0-9]+)$/\1/p
+	s/^Vendor ID:\s+([A-Za-z]+)$/\1/p
+	/^Model name/ {
+		# Strip "APU"/"CPU"/"Processor"
+		s/( (APU|CPU|Processor).*)$//
+		s/^Model name:\s+(.+)/\1/p
+	}
+	s/^CPU MHz:\s+([0-9]+).+$/\1/p
+	s/^CPU max MHz:\s+([0-9]+).+$/\1/p
 ') )
 
 cpu_threads="${cpuinfo[1]}"
@@ -70,9 +75,14 @@ cpu_cores=$(( $cpu_sockets * $cpu_coresps ))
 
 cpu_vendor="${cpuinfo[4]}"
 cpu_model="${cpuinfo[5]}"
-cpu_freq="${cpuinfo[6]}"
 
+cpu_freq_current="${cpuinfo[6]}"
+cpu_max_freq="${cpuinfo[7]}"
 
+# Use current F if max F is not available
+cpu_freq=${cpu_max_freq:-$cpu_freq_current}
+
+# Format frequency (YYZ -> YYZ MHz / XYYZ -> X.YY Ghz)
 if [ ${#cpu_freq} -eq 4 ];
 then
 	cpu_freq="${cpu_freq:0:1}.${cpu_freq:1:2} GHz"
