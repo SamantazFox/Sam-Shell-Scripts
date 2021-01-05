@@ -53,32 +53,31 @@ mem_avail_mb=$(( $mem_avail_kb / 1024 ))
 
 
 # CPU informations
-cpuinfo=( $(sed -nE '
-	14q # print only the 14 first lines
-	s/model name\s*:\s+(.+)(APU|CPU|Processor).*/\1\2/p
-	s/cpu MHz\s+:\s+([0-9]+).*/\1/p
-	s/siblings\s*:\s+([0-9]+)/\1/p
-	s/cpu cores\s*:\s+([0-9]+)/\1/p
-' /proc/cpuinfo) )
+cpuinfo=( $(lscpu | sed -nE '
+	s/^CPU\(s\):            \s+([0-9]+)$/\1/p
+	s/^Core\(s\) per socket:\s+([0-9]+)$/\1/p
+	s/^Socket\(s\):         \s+([0-9]+)$/\1/p
+	s/^Vendor ID:           \s+([A-Za-z]+)$/\1/p
+	s/^Model name:          \s+(.+) (APU|CPU|Processor).*$/\1/p
+	s/^CPU max MHz:         \s+([0-9]+).+$/\1/p
+') )
 
-cpu_name="${cpuinfo[1]}"
-cpu_cores="${cpuinfo[4]}"
-cpu_threads="${cpuinfo[3]}"
+cpu_threads="${cpuinfo[1]}"
+cpu_coresps="${cpuinfo[2]}"
+cpu_sockets="${cpuinfo[3]}"
 
-if test -e /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq
+cpu_cores=$(( $cpu_sockets * $cpu_coresps ))
+
+cpu_vendor="${cpuinfo[4]}"
+cpu_model="${cpuinfo[5]}"
+cpu_freq="${cpuinfo[6]}"
+
+
+if [ ${#cpu_freq} -eq 4 ];
 then
-	# Intel hosts, apparently
-	cpu_freq=$(cat /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq)
-
-	if [ ${#cpu_freq} -eq 7 ];
-	then
-		cpu_freq="${cpu_freq:0:1}.${cpu_freq:1:1} GHz"
-	else
-		cpu_freq="${cpu_freq:0:3} MHz"
-	fi
+	cpu_freq="${cpu_freq:0:1}.${cpu_freq:1:2} GHz"
 else
-	# Other (AMD, ARM)
-	cpu_freq="${cpuinfo[2]} MHz"
+	cpu_freq="${cpu_freq} MHz"
 fi
 
 

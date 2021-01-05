@@ -29,7 +29,7 @@ os_specs=(
 "${bg}Kernel${n} ${kernel}"
 "${bg}Shell:${n} ${shell}"
 "${bg}Disk:${n} ${disks_used} / ${disks_total} [${disks_avail} free]"
-"${bg}CPU:${n} ${cpu_name} @ ${cpu_threads}x ${cpu_freq}"
+"${bg}CPU:${n} ${cpu_model} [${cpu_cores}C/${cpu_threads}T] @ ${cpu_freq}"
 "${bg}GPU:${n} ${gpu}"
 "${bg}RAM:${n} ${mem_avail_mb}MB / ${mem_total_mb}MB"
 )
