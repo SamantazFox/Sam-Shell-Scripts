@@ -117,6 +117,7 @@ then
 		Intel*)	gpu="Intel $gpu_device";;
 		NVIDIA*) gpu="$gpu_vendor $gpu_device";;
 		X.Org) gpu="$gpu_device";;  # AMD
+		*) gpu="$gpu_vendor $gpu_device";; # Default case
 	esac
 else
 	# Change IFS to match only newlines in lspci
