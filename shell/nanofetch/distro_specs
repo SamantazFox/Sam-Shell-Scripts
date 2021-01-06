@@ -37,18 +37,18 @@ kernel="$(uname -m) $(uname -sr)"
 # Memory informations
 meminfo=( $(sed -nE '
 	s/MemTotal:\s+([0-9]+) kB/\1/p
-	s/MemFree:\s+([0-9]+) kB/\1/p
 	s/MemAvailable:\s+([0-9]+) kB/\1/p
 ' /proc/meminfo) )
 
-mem_total_kb="${meminfo[1]}"
-mem_total_mb=$(( $mem_total_kb / 1024 ))
+mem_total_kib="${meminfo[1]}"
+mem_total_mib=$(( $mem_total_kib / 1024 ))
 
-mem_free_kb="${meminfo[2]}"
-mem_free_mb=$(( $mem_free_kb / 1024 ))
+mem_avail_kib="${meminfo[2]}"
+mem_avail_mib=$(( $mem_avail_kib / 1024 ))
 
-mem_avail_kb="${meminfo[3]}"
-mem_avail_mb=$(( $mem_avail_kb / 1024 ))
+mem_used_kib=$(( $mem_total_kib - $mem_avail_kib ))
+mem_used_mib=$(( $mem_used_kib / 1024 ))
+
 
 
 # CPU informations
