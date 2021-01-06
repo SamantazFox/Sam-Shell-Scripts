@@ -9,14 +9,13 @@ if [ -e /etc/lsb-release ]; then
 	. /etc/lsb-release
 	distro="$DISTRIB_ID $DISTRIB_RELEASE $DISTRIB_CODENAME"
 
-# RedHat / Fedora / CentOS
-elif [ -e /etc/redhat-release ]; then distro=$(cat /etc/redhat-release)
-elif [ -e /etc/system-release ]; then distro=$(cat /etc/system-release)
-
-# Arch Linux / Manjaroo
+# Fedora / CentOS / Arch Linux / Manjaroo
 elif [ -e /etc/os-release ]; then
 	. /etc/os-release
-	distro="$NAME"
+	distro="${PRETTY_NAME:-$NAME}"
+
+# RedHat
+elif [ -e /etc/redhat-release ]; then distro=$(cat /etc/redhat-release)
 
 # Fallback
 else
