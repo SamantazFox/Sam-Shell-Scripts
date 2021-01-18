@@ -1,6 +1,17 @@
 #!/bin/sh
 
 #
+# Force some environment variables
+#
+
+_old_IFS=$IFS
+
+IFS="
+"
+LANG=C
+
+
+#
 # Distro name
 #
 
@@ -27,8 +38,6 @@ fi
 # Kernel / Memory / CPU details
 #
 
-_old_IFS=$IFS
-IFS=$'\n'
 
 # Kernel version
 kernel="$(uname -m) $(uname -sr)"
