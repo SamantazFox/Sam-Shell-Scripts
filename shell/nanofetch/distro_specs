@@ -5,9 +5,10 @@
 #
 
 _old_IFS=$IFS
-
-IFS="
+_new_IFS="
 "
+
+IFS=$_new_IFS
 LANG=C
 
 
@@ -38,21 +39,23 @@ fi
 # Kernel / Memory / CPU details
 #
 
-
 # Kernel version
 kernel="$(uname -m) $(uname -sr)"
 
 
 # Memory informations
-meminfo=( $(sed -nE '
+get_mem_info()
+{
+	mem_total_kib=$1
+	mem_avail_kib=$2
+}
+
+get_mem_info $(sed -nE '
 	s/MemTotal:\s+([0-9]+) kB/\1/p
 	s/MemAvailable:\s+([0-9]+) kB/\1/p
-' /proc/meminfo) )
+' /proc/meminfo)
 
-mem_total_kib="${meminfo[1]}"
 mem_total_mib=$(( $mem_total_kib / 1024 ))
-
-mem_avail_kib="${meminfo[2]}"
 mem_avail_mib=$(( $mem_avail_kib / 1024 ))
 
 mem_used_kib=$(( $mem_total_kib - $mem_avail_kib ))
@@ -61,7 +64,18 @@ mem_used_mib=$(( $mem_used_kib / 1024 ))
 
 
 # CPU informations
-cpuinfo=( $(lscpu | sed -nE '
+get_cpu_info()
+{
+	cpu_threads=$1
+	cpu_coresps=$2
+	cpu_sockets=$3
+	cpu_vendor=$4
+	cpu_model=$5
+	cpu_freq_current=$6
+	cpu_max_freq=$7
+}
+
+get_cpu_info $(lscpu | sed -nE '
 	s/^CPU\(s\):\s+([0-9]+)$/\1/p
 	s/^Core\(s\) per socket:\s+([0-9]+)$/\1/p
 	s/^Socket\(s\):\s+([0-9]+)$/\1/p
@@ -73,19 +87,10 @@ cpuinfo=( $(lscpu | sed -nE '
 	}
 	s/^CPU MHz:\s+([0-9]+).+$/\1/p
 	s/^CPU max MHz:\s+([0-9]+).+$/\1/p
-') )
+')
 
-cpu_threads="${cpuinfo[1]}"
-cpu_coresps="${cpuinfo[2]}"
-cpu_sockets="${cpuinfo[3]}"
 
 cpu_cores=$(( $cpu_sockets * $cpu_coresps ))
-
-cpu_vendor="${cpuinfo[4]}"
-cpu_model="${cpuinfo[5]}"
-
-cpu_freq_current="${cpuinfo[6]}"
-cpu_max_freq="${cpuinfo[7]}"
 
 # Use current F if max F is not available
 cpu_freq=${cpu_max_freq:-$cpu_freq_current}
@@ -93,7 +98,9 @@ cpu_freq=${cpu_max_freq:-$cpu_freq_current}
 # Format frequency (YYZ -> YYZ MHz / XYYZ -> X.YY Ghz)
 if [ ${#cpu_freq} -eq 4 ];
 then
-	cpu_freq="${cpu_freq:0:1}.${cpu_freq:1:2} GHz"
+	cpu_freq_ghz=$(( $cpu_freq / 1000 ))
+	cpu_freq_rem=$(( $cpu_freq - ($cpu_freq_ghz*1000) ))
+	cpu_freq="${cpu_freq_ghz}.${cpu_freq_rem} GHz"
 else
 	cpu_freq="${cpu_freq} MHz"
 fi
@@ -121,13 +128,19 @@ disks_avail=${disks_raw[-3]}
 
 if [ -e /bin/glxinfo ] || [ -e /usr/bin/glxinfo ]
 then
-	IFS=$'\n' glxinfo=( $( glxinfo -B | sed -nE "
+
+	get_glx_info()
+	{
+		gpu_vendor=$1
+		gpu_device=$2
+	}
+
+	IFS=$_new_IFS
+	get_glx_info $(glxinfo -B | sed -nE '
 		s|OpenGL vendor string: (.*)|\1|pg
 		s|OpenGL renderer string: ([^/]+).*|\1|pg
-	") )
+	')
 
-	gpu_vendor="${glxinfo[1]}"
-	gpu_device="${glxinfo[2]}"
 
 	# Avoid "Intel Open Source Technology Center"
 	case "$gpu_vendor" in
@@ -136,20 +149,36 @@ then
 		X.Org) gpu="$gpu_device";;  # AMD
 		*) gpu="$gpu_vendor $gpu_device";; # Default case
 	esac
+
 else
+
+	get_gpu_info1()
+	{
+		gpu_int=$1
+		gpu_ext=$2
+	}
+
+	get_gpu_info2()
+	{
+		local gpu_vendor=$3
+		case $gpu_vendor in
+			*AMD*)
+				local gpu_device=$(echo "$4" | sed -nE 's/^.+\[(.*)\]$/\1/p')
+				echo "AMD $gpu_device"
+				;;
+			*) echo "$gpu_vendor $gpu_device";;
+		esac
+	}
+
 	# Change IFS to match only newlines in lspci
-	IFS=$'\n' gpu_all=( $( \
-		lspci -mm | sed -nE '/VGA/{ s/(" "| "|" )/|/g; s/"$//p }'
-	) )
+	# TODO: rely on something faster than lspci
+	IFS=$_new_IFS
+	get_gpu_info1 $(lspci -mm -d ::0300)
+	IFS=$_old_IFS
 
-	# Internal GPU (iGPU)
-	IFS=$'|' gpu_int=( $(echo ${gpu_all[1]}) )
-	gpu_int="${gpu_int[3]} $(echo "${gpu_int[4]}" | sed -nE 's/\[(.*)\]/\1/p')"
-
-	# External GPU (graphics card)
-	IFS=$'|' gpu_ext=( $(echo ${gpu_all[2]}) )
-	gpu_ext="${gpu_ext[3]} $(echo "${gpu_ext[4]}" | sed -nE 's/\[(.*)\]/\1/p')"
-
+	# Internal GPU = iGPU / External GPU = discrete card
 	# Prefer external gpu
-	gpu="${gpu_ext:-gpu_int}"
+	gpu="${gpu_ext:-$gpu_int}"
+	gpu=$(eval "get_gpu_info2 $gpu")
+
 fi
