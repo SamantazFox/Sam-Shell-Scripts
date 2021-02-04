@@ -11,5 +11,5 @@
 
 function compare()
 {
-	diff -U 3 --color=always "$1" "$2" | less -R
+	diff -U 3 --color=always $@ | less -R
 }
