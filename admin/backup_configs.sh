@@ -174,6 +174,10 @@ if test -d $postfix_dir; then
 	targz "Postfix" $postfix_dir
 fi
 
+# Backup BIND 9 config (without DDNS key)
+bind_dir=/etc/bind
+targz "bind9" $bind_dir 'rndc.key'
+
 
 
 # final new line and cleanup
