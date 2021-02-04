@@ -178,6 +178,10 @@ fi
 bind_dir=/etc/bind
 targz "bind9" $bind_dir 'rndc.key'
 
+# Backup NSD config (without control/server keys and certs)
+nsd_dir=/etc/nsd
+targz "NSD" $nsd_dir 'nsd_control.* nsd_server.*'
+
 
 
 # final new line and cleanup
