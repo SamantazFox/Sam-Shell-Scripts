@@ -116,8 +116,8 @@ function targz()
 	echo
 	echo "Backing up ${red}${program_name}${reset}"
 	echo "Backing up ${program_name}" | tr '[:alnum:] ' '--'
-	echo "${dgrey}Source dir is: ${white}${sub_dir}${reset}"
-	echo "${dgrey}Output is: ${white}${input_dir}${reset}"
+	echo "${dgrey}Source dir is: ${white}${input_dir}${reset}"
+	echo "${dgrey}Output is: ${white}${output}${reset}"
 
 	if test -z "${excludes}"; then
 		tar -czf $output "$input" #> /dev/null 2>&1
