@@ -16,7 +16,6 @@
 
 clip-to-b64()
 {
-	set -x
 	# Get the mimetype associated to the clipboard content
 	# In case of multiple mimetypes, make sure this is not a
 	# text string, then take the first one available wich is not text.
@@ -33,7 +32,7 @@ clip-to-b64()
 	') || return $?
 
 	mimetype=$(xclip -selection clipboard -o -t TARGETS | \
-		sed -n -E '/^(application|image)\/[A-Za-z0-9\-_.]+/p; q'
+		sed -n -E '/^(application|image)\/[A-Za-z0-9\-_.]+/{p;q}'
 	)
 	if test -z "$mimetype"; then return 1; fi
 
