@@ -1,10 +1,9 @@
 #!/bin/sh
 #
-# Xen delete-image
+# Xen del-image
 #
-# Deletes a VM previously created with
-# xen-create-image, along with all its assets
-# (logs and config files)
+# Deletes a VM previously created with xen-new-image,
+# along with all its assets (logs and config files)
 #
 # Copyright (c) 2021 Samantaz Fox
 #
