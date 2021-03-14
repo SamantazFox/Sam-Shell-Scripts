@@ -19,7 +19,7 @@ LOG_DIR="/var/log/xen-tools"
 
 usage()
 {
-	echo "Usage $1 <VM hostname>"
+	echo "Usage: $0 <VM hostname>"
 }
 
 name=$(basename "$1" .${DNS_DOMAIN})

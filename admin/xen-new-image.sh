@@ -18,7 +18,7 @@ DNS_HOSTNAME="example.com"
 
 usage()
 {
-	echo "Usage $1 <vCPUs> <RAM> <VM hostname>"
+	echo "Usage: $0 <vCPUs> <RAM> <VM hostname>"
 }
 
 
