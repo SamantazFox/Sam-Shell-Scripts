@@ -1,4 +1,16 @@
 #!/bin/sh
+#
+# Xen delete-image
+#
+# Deletes a VM previously created with
+# xen-create-image, along with all its assets
+# (logs and config files)
+#
+# Copyright (c) 2021 Samantaz Fox
+#
+# Licensed under the "BSD 3 clauses" license.
+# Refer to LICENSE.md for more details.
+#
 
 
 DNS_DOMAIN="example.com"

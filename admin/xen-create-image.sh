@@ -1,4 +1,16 @@
 #!/bin/sh
+#
+# Xen create-image
+#
+# Semi-interactive wrapper for xen-create-image
+# with automatic domain name assignation and
+# pre-defined roles.
+#
+# Copyright (c) 2021 Samantaz Fox
+#
+# Licensed under the "BSD 3 clauses" license.
+# Refer to LICENSE.md for more details.
+#
 
 
 DNS_HOSTNAME="example.com"
