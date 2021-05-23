@@ -1,0 +1,46 @@
+#!/bin/sh
+#
+# Floppy logo
+#
+
+d="${COLOR_NONE}${COLOR_FG_DGREY}";
+w="${COLOR_FG_WHITE}";
+g="${COLOR_FG_GREY}";
+L="${COLOR_FG_BLACK}${COLOR_BG_GREY}";
+
+# Different disk number
+n=$(( $RANDOM % 8 ))
+
+# Different bottom colors
+case $(( $RANDOM % 4 )) in
+	0) x="${COLOR_BG_BLUE}";;
+	1) x="${COLOR_BG_GREEN}";;
+	2) x="${COLOR_BG_RED}";;
+	*) x="${COLOR_BG_PURPLE}";;
+esac
+
+
+#logo_floppy=(
+#"               "
+#"${d}  ,---${w}------${d}-.  "
+#"${d}  |${w}^${d}| ${w}|__[]|°${d}|  "
+#"${d}  |  ______  |  "
+#"${d}  | ${L} DATA   ${d} |  "
+#"${d}  | ${L} ------ ${d} |  "
+#"${d}  | ${L} ------ ${d} |  "
+#"${d}  |_${x}        ${d}_|  "
+#)
+
+logo_floppy=(
+"${d}   ______${w}____${d}__    "
+"${d}  |${w}^${d} |__${w}|__[]|${d} \\   "
+"${d}  |${g}HD${d}_________  |  "
+"${d}  | |${L} DATA ${n}  ${d}| |  "
+"${d}  | |${L} ------  ${d}| |  "
+"${d}  | |${L} Art by  ${d}| |  "
+"${d}  | |${L} SamFox  ${d}| |  "
+"${d}  |_|${x}         ${d}|_|  "
+)
+
+# Cleanup
+unset d w g L n x

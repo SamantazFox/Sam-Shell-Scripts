@@ -1,0 +1,25 @@
+#!/bin/sh
+#
+# Cacti logo
+#
+
+g="${COLOR_FG_GREEN}";
+p="${COLOR_FG_LPURPLE}";
+t="${COLOR_FG_GREY}";
+
+# Flower
+f="${p}*${g}"
+
+logo_cacti=(
+"${g}      ,${f}-.      "
+"${g}      |  |      "
+"${g}  ,.. |  |      "
+"${g}  | |_|  | ,${f},  "
+"${g}  \`---.  |_| |  "
+"${t}  Art${g} |  .--\`   "
+"${t}  by ${g} |  |      "
+"${t}  kra ${g}|  |      "
+)
+
+# Cleanup
+unset g p h f

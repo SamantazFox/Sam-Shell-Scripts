@@ -1,0 +1,28 @@
+#!/bin/sh
+#
+# R2-D2 logo
+#
+
+w="${COLOR_FG_WHITE}";
+b="${COLOR_FG_LBLUE}";
+
+# shell parts (left/right)
+sl="${b}]${w}"
+sr="${b}[${w}"
+
+# Blue dot
+o="${b}o${w}"
+
+logo_r2d2=(
+"${w}     .-\"\"-.      "
+"${w}    /${b}[0]${w} __\\     "
+"${w}   _|__${o} LI|_    "
+"${w}  /_| ${b}====${w} |_\\   "
+"${w}   ${sl}|\" ||  |${sr}    "
+"${w}   ${sl}|LI  ${o} |${sr}    "
+"${w}   ${sl}|'----'|${sr}    "
+"${w}  /_\\ /__\\ /_\\   "
+)
+
+# Cleanup
+unset w b sl sr o
