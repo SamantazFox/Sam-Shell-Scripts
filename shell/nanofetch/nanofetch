@@ -11,10 +11,6 @@ mydir=${0%/*}
 # Get OS details
 . $mydir/distro_specs
 
-# import logos
-. $mydir/logo/tux
-. $mydir/logo/fox
-
 
 #
 # Shorthands for styles/colors
@@ -93,12 +89,24 @@ os_specs=(
 IFS=$'\n'
 
 # Random selection of logo to use
-if $(test $(( $RANDOM % 2 )) -eq 1)
-then
-	logo=( ${fox_logo[@]} )
-else
-	logo=( ${tux_logo[@]} )
-fi
+case $(( $RANDOM % 4 )) in
+	0)  # A small fox head logo
+		. $mydir/logos/fox
+		logo=( ${fox_logo[@]} )
+		;;
+	1)  # A floppy disk with randomized colors
+		. $mydir/logos/floppy
+		logo=( ${logo_floppy[@]} )
+		;;
+	2)  # A green cacti with pink flowers
+		. $mydir/logos/cacti
+		logo=( ${logo_cacti[@]} )
+		;;
+	*)  # R2-D2
+		. $mydir/logos/r2d2
+		logo=( ${logo_r2d2[@]} )
+		;;
+esac
 
 # Display data + logo
 for i in $(seq ${#logo}); do
