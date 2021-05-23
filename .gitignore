@@ -10,6 +10,7 @@
 
 !shell/
 !shell/*
+!shell/**
 
 !admin/
 !admin/*
