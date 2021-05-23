@@ -12,8 +12,8 @@ mydir=${0%/*}
 . $mydir/distro_specs
 
 # import logos
-. $mydir/logo_tux
-. $mydir/logo_fox
+. $mydir/logo/tux
+. $mydir/logo/fox
 
 
 #
