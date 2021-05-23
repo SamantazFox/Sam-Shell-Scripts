@@ -5,8 +5,14 @@
 
 function gen-rsa-with-csr()
 {
+	if test $# -eq 0; then
+		echo "usage: gen-rsa-with-csr <key name> [<CSR subject string>]"
+		return 0
+	fi
+
 	# Input sanitization / verification
 	keyname=$(echo $1 | sed -E 's/[^A-Za-z0-9\-_]//g')
+	if test -z "$keyname"; then echo "Error: Invalid key name."; return 1; fi
 
 	# Create a new RSA key then derivate public key
 	openssl genrsa -out $keyname.key 4096
