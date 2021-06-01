@@ -23,16 +23,15 @@ w="${COLOR_FG_WHITE}";
 b="${COLOR_FG_LBLUE}";
 g="${COLOR_FG_GREY}";
 
-fox_logo=(
-"${w}                    "
-"${w}   /\   /\          "
-"${f}  //\\\\\\\\_//\\\\\\\\ ${w}  ___   "
-"${f}  \_'''''_/ ${w} /  /   "
-"${f}   / ${b}* ${b}*${f} \  (${w}^^^${f})   "
-"${f}   \_\./_/  |   \   "
-"${f}     / ^    /   /   "
-"${g} Art by Todd Vargo  "
-)
+# Logo
+logo_0="${w}                    "
+logo_1="${w}   /\   /\          "
+logo_2="${f}  //\\\\\\\\_//\\\\\\\\ ${w}  ___   "
+logo_3="${f}  \_'''''_/ ${w} /  /   "
+logo_4="${f}   / ${b}* ${b}*${f} \  (${w}^^^${f})   "
+logo_5="${f}   \_\./_/  |   \   "
+logo_6="${f}     / ^    /   /   "
+logo_7="${g} Art by Todd Vargo  "
 
 # Cleanup
 unset f w b g

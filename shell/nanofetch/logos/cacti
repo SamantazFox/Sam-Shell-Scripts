@@ -26,16 +26,15 @@ t="${COLOR_FG_GREY}";
 # Flowers
 f="${p}*${g}"
 
-logo_cacti=(
-"${g}      ,${f}-.      "
-"${g}      |  |      "
-"${g}  ,.. |  |      "
-"${g}  | |_|  | ,${f},  "
-"${g}  \`---.  |_| |  "
-"${t}  Art${g} |  .--\`   "
-"${t}  by ${g} |  |      "
-"${t}  kra ${g}|  |      "
-)
+# Logo
+logo_0="${g}      ,${f}-.      "
+logo_1="${g}      |  |      "
+logo_2="${g}  ,.. |  |      "
+logo_3="${g}  | |_|  | ,${f},  "
+logo_4="${g}  \`---.  |_| |  "
+logo_5="${t}  Art${g} |  .--\`   "
+logo_6="${t}  by ${g} |  |      "
+logo_7="${t}  kra ${g}|  |      "
 
 # Cleanup
 unset g p h f

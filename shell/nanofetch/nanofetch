@@ -13,6 +13,21 @@ mydir=${0%/*}
 
 
 #
+# Random selection of logo to use
+#
+
+case $(( $RANDOM % 8 )) in
+	0) . $mydir/logos/fox;;     # A small fox head logo
+	1) . $mydir/logos/floppy;;  # A floppy disk with randomized colors
+	2) . $mydir/logos/cacti;;   # A green cacti with pink flowers
+	3) . $mydir/logos/r2d2;;    # R2-D2
+	4) . $mydir/logos/windows;; # Microsoft Windows logo
+	5) . $mydir/logos/rainbow;; # A colorful rainbow
+	*) . $mydir/logos/tux;;     # Tux, the Linux mascot
+esac
+
+
+#
 # Shorthands for styles/colors
 #
 
@@ -70,45 +85,14 @@ fi
 
 
 #
-# Text
+# Display logo and data
 #
 
-os_specs=(
-""
-"${bg}OS:${n} ${distro}"
-"${bg}Kernel${n} ${kernel}"
-"${bg}Shell:${n} ${shell}"
-"${bg}Disk:${n} ${disks_used} / ${disks_total} [${disks_avail} free]"
-"${bg}CPU:${n} ${cpu_model} [${cpu_cores}C/${cpu_threads}T] @ ${cpu_freq}"
-"${bg}GPU:${n} ${gpu}"
-"${bg}RAM:${n} ${mem_used} / ${mem_total} [${mem_avail} free]"
-)
-
-
-# Change separator to newline
-IFS=$'\n'
-
-# Random selection of logo to use
-case $(( $RANDOM % 4 )) in
-	0)  # A small fox head logo
-		. $mydir/logos/fox
-		logo=( ${fox_logo[@]} )
-		;;
-	1)  # A floppy disk with randomized colors
-		. $mydir/logos/floppy
-		logo=( ${logo_floppy[@]} )
-		;;
-	2)  # A green cacti with pink flowers
-		. $mydir/logos/cacti
-		logo=( ${logo_cacti[@]} )
-		;;
-	*)  # R2-D2
-		. $mydir/logos/r2d2
-		logo=( ${logo_r2d2[@]} )
-		;;
-esac
-
-# Display data + logo
-for i in $(seq ${#logo}); do
-	printf "${logo[$i]}${os_specs[$i]}\n"
-done
+echo "${logo_0}"
+echo "${logo_1}${bg}OS:${n} ${distro}"
+echo "${logo_2}${bg}Kernel${n} ${kernel}"
+echo "${logo_3}${bg}Shell:${n} ${shell}"
+echo "${logo_4}${bg}Disk:${n} ${disks_used} / ${disks_total} [${disks_avail} free]"
+echo "${logo_5}${bg}CPU:${n} ${cpu_model} [${cpu_cores}C/${cpu_threads}T] @ ${cpu_freq}"
+echo "${logo_6}${bg}GPU:${n} ${gpu}"
+echo "${logo_7}${bg}RAM:${n} ${mem_used} / ${mem_total} [${mem_avail} free]"
