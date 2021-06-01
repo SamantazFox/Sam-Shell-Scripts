@@ -2,7 +2,23 @@
 #
 # Tux logo
 #
+#       __
+#      °  °
+#     |o_o |
+#     |:_/ |
+#    /    \ \
+#   (|     | )
+#  /'\_   _/`\
+#  \___)=(___/
+#
+# Source: https://ascii.co.uk/art/linux
+# Artist: Przemek Borys
+#
+# Some adaptations were made by me in order to better
+# fit the terminal and look better in color.
+#
 
+# Colors
 c1="${COLOR_FG_WHITE}";
 c2="${COLOR_FG_DGREY}";
 c3="${COLOR_FG_YELLOW}";

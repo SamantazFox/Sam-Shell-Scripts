@@ -2,11 +2,27 @@
 #
 # R2-D2 logo
 #
+#     .-""-.
+#    /[0] __\
+#   _|__o LI|_
+#  /_| ==== |_\
+#   ]|" ||  |[
+#   ]|LI  o |[
+#   ]|'----'|[
+#  /_\ /__\ /_\
+#
+# Source: https://lukecod.es/static/5c6744cd9c29895e489b229b46c55516/cb011/ascii-r2d2.webp
+# Artist: Luke Karrys (https://lukecod.es/)
+#
+# Some adaptations were made by me in order to better
+# fit the terminal and look better in color.
+#
 
+# Colors
 w="${COLOR_FG_WHITE}";
 b="${COLOR_FG_LBLUE}";
 
-# shell parts (left/right)
+# Shell parts (left/right)
 sl="${b}]${w}"
 sr="${b}[${w}"
 

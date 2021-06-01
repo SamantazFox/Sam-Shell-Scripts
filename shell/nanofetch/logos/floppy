@@ -2,7 +2,22 @@
 #
 # Floppy logo
 #
+#   ____________
+#  |^ |__|__[]| \
+#  |HD_________  |
+#  | | DATA 1  | |
+#  | | ------  | |
+#  | | Art by  | |
+#  | | SamFox  | |
+#  |_|_________|_|
+#
+# Artist: Samantaz Fox (me :D)
+#
+# Special thanks to KatieCookie, who gave a ton of
+# feedback while I was making progress on this one!
+#
 
+# Colors
 d="${COLOR_NONE}${COLOR_FG_DGREY}";
 w="${COLOR_FG_WHITE}";
 g="${COLOR_FG_GREY}";

@@ -2,12 +2,28 @@
 #
 # Cacti logo
 #
+#      ,*-.
+#      |  |
+#  ,.. |  |
+#  | |_|  | ,*,
+#  `---.  |_| |
+#  Art |  .--`
+#  by  |  |
+#  kra |  |
+#
+# Source: https://www.asciiart.eu/plants/cactus
+# Artist: kra
+#
+# Some adaptations were made by me in order to better
+# fit the terminal and look better in color.
+#
 
+# Colors
 g="${COLOR_FG_GREEN}";
 p="${COLOR_FG_LPURPLE}";
 t="${COLOR_FG_GREY}";
 
-# Flower
+# Flowers
 f="${p}*${g}"
 
 logo_cacti=(
