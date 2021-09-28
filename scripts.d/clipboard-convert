@@ -57,3 +57,32 @@ clip-to-any()
 	# Restore the content (decoded and gunzip'd) with its proper mimetype
 	echo $data | base64 -d - | gunzip -c - | xclip -selection clipboard -i -t $type
 }
+
+file-to-clip()
+{
+	# Only accept files, not directories
+	if ! [ -f "$1" ]; then echo "Error: not a file"; return 1; fi
+
+	name=$(basename "$1")
+	type=$(file --brief --mime-type "$1")
+	size=$(du -sb "$1" | sed -E 's/([0-9]+)\s+.+/\1/')
+
+	# 2MB max size limit
+	if [ $size -ge 2000000 ]; then echo "Error: file too large"; return 1; fi
+	data=$(gzip -kc "$1" | base64 -)
+
+	sha1sum "$1"
+	printf "${type}\n${name}\n${data}\n" | xclip -selection clipboard -i
+}
+
+clip-to-file()
+{
+	# Get the clipboard's content (in base64) and the associated mimetype
+	type=$(xclip -selection clipboard -o | sed -n '1p')
+	name=$(xclip -selection clipboard -o | sed -n '2p')
+	data=$(xclip -selection clipboard -o | sed '1,2d')
+
+	if [ -e "$name" ]; then echo "Error: destination exists"; return 1; fi
+	echo $data | base64 -d - | gunzip -c - > "$name"
+	sha1sum "$name"
+}
