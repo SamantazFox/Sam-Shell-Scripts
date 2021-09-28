@@ -1,16 +1,6 @@
 #!/bin/sh
 
-#
-# Force some environment variables
-#
-
-_old_IFS=$IFS
-_new_IFS="
-"
-
 IFS=$_new_IFS
-LANG=C
-
 
 #
 # Distro name
@@ -124,61 +114,3 @@ disks_raw=( $(df -Ph --total --local -x tmpfs -x devtmpfs) )
 disks_total=${disks_raw[-5]}
 disks_used=${disks_raw[-4]}
 disks_avail=${disks_raw[-3]}
-
-
-if [ -e /bin/glxinfo ] || [ -e /usr/bin/glxinfo ]
-then
-
-	get_glx_info()
-	{
-		gpu_vendor=$1
-		gpu_device=$2
-	}
-
-	IFS=$_new_IFS
-	get_glx_info $(glxinfo -B | sed -nE '
-		s|OpenGL vendor string: (.*)|\1|pg
-		s|OpenGL renderer string: ([^/]+).*|\1|pg
-	')
-
-
-	# Avoid "Intel Open Source Technology Center"
-	case "$gpu_vendor" in
-		Intel*)	gpu="Intel $gpu_device";;
-		NVIDIA*) gpu="$gpu_vendor $gpu_device";;
-		X.Org) gpu="$gpu_device";;  # AMD
-		*) gpu="$gpu_vendor $gpu_device";; # Default case
-	esac
-
-else
-
-	get_gpu_info1()
-	{
-		gpu_int=$1
-		gpu_ext=$2
-	}
-
-	get_gpu_info2()
-	{
-		local gpu_vendor=$3
-		case $gpu_vendor in
-			*AMD*)
-				local gpu_device=$(echo "$4" | sed -nE 's/^.+\[(.*)\]$/\1/p')
-				echo "AMD $gpu_device"
-				;;
-			*) echo "$gpu_vendor $gpu_device";;
-		esac
-	}
-
-	# Change IFS to match only newlines in lspci
-	# TODO: rely on something faster than lspci
-	IFS=$_new_IFS
-	get_gpu_info1 $(lspci -mm -d ::0300)
-	IFS=$_old_IFS
-
-	# Internal GPU = iGPU / External GPU = discrete card
-	# Prefer external gpu
-	gpu="${gpu_ext:-$gpu_int}"
-	gpu=$(eval "get_gpu_info2 $gpu")
-
-fi

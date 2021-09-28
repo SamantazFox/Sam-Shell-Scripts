@@ -1,0 +1,24 @@
+#!/bin/sh
+
+get_glx_info()
+{
+	gpu_vendor=$1
+	gpu_device=$2
+}
+
+IFS=$_new_IFS
+
+get_glx_info $(glxinfo -B | sed -nE '
+	s|OpenGL vendor string: (.*)|\1|pg
+	s|OpenGL renderer string: ([^/]+).*|\1|pg
+')
+
+IFS=$_old_IFS
+
+# Avoid "Intel Open Source Technology Center"
+case "$gpu_vendor" in
+	Intel*)	gpu="Intel $gpu_device";;
+	NVIDIA*) gpu="$gpu_vendor $gpu_device";;
+	X.Org) gpu="$gpu_device";;  # AMD
+	*) gpu="$gpu_vendor $gpu_device";; # Default case
+esac

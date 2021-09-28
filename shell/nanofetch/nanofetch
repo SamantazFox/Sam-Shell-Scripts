@@ -4,12 +4,37 @@
 # use relative paths
 mydir=${0%/*}
 
-
 # Import color definitions
 . $mydir/../colors
 
+
+#
+# Set some environment variables
+#
+
+LANG=C
+
+_old_IFS=$IFS
+_new_IFS="
+"
+
+
+#
 # Get OS details
+#
+
+# Provides $distro, $kernel, $mem_*_mib, $shell, $disks_*, $cpu_*
 . $mydir/distro_specs
+
+# Provides $gpu
+if [ -e /bin/glxinfo ] || [ -e /usr/bin/glxinfo ]
+then
+	# GLXinfo output, by Brian Paul
+	. $mydir/probes/gpu_glxinfo
+else
+	# Fallback to 'lscpci', from 'pciutils'
+	. $mydir/probes/gpu_lspci
+fi
 
 
 #

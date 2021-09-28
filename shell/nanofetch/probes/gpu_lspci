@@ -1,0 +1,30 @@
+#!/bin/sh
+
+get_gpu_info1()
+{
+	gpu_int=$1
+	gpu_ext=$2
+}
+
+get_gpu_info2()
+{
+	local gpu_vendor=$3
+	case $gpu_vendor in
+		*AMD*)
+			local gpu_device=$(echo "$4" | sed -nE 's/^.+\[(.*)\]$/\1/p')
+			echo "AMD $gpu_device"
+			;;
+		*) echo "$gpu_vendor $gpu_device";;
+	esac
+}
+
+# Change IFS to match only newlines in lspci
+# TODO: rely on something faster than lspci
+IFS=$_new_IFS
+get_gpu_info1 $(lspci -mm -d ::0300)
+IFS=$_old_IFS
+
+# Internal GPU = iGPU / External GPU = discrete card
+# Prefer external gpu
+gpu="${gpu_ext:-$gpu_int}"
+gpu=$(eval "get_gpu_info2 $gpu")
