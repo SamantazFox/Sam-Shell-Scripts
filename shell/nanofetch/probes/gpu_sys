@@ -13,29 +13,17 @@ get_gpu_info()
 	gpu_ext=$2
 }
 
-
-# Allows to use sed a single time below
-read_info()
-{
-	vendor=$1
-	device=$2
-}
-
-
 list_devices()
 {
 	local dev_path=/sys/bus/pci/devices/
 
 	for dev in $(ls --color=none $dev_path); do
 
-		class=$(cat $dev_path/$dev/class)
-
+		read class < $dev_path/$dev/class
 		if [ $class != "0x030000" ]; then continue; fi
 
-		read_info $(sed 's/0x//g' \
-			$dev_path/$dev/vendor \
-			$dev_path/$dev/device
-		)
+		read vendor < $dev_path/$dev/vendor; vendor=${vendor#0x*}
+		read device < $dev_path/$dev/device; device=${device#0x*}
 
 		case $vendor in
 			1002) vendor_name="AMD/ATI";;
