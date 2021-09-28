@@ -1,0 +1,78 @@
+#!/bin/sh
+
+if [ -f /usr/share/misc/pci.ids ]; then
+	dev_data="/usr/share/misc/pci.ids"
+elif [ -f /usr/share/hwdata/pci.ids ]; then
+	dev_data="/usr/share/hwdata/pci.ids"
+fi
+
+
+get_gpu_info()
+{
+	gpu_int=$1
+	gpu_ext=$2
+}
+
+
+# Allows to use sed a single time below
+read_info()
+{
+	vendor=$1
+	device=$2
+}
+
+
+list_devices()
+{
+	local dev_path=/sys/bus/pci/devices/
+
+	for dev in $(ls --color=none $dev_path); do
+
+		class=$(cat $dev_path/$dev/class)
+
+		if [ $class != "0x030000" ]; then continue; fi
+
+		read_info $(sed 's/0x//g' \
+			$dev_path/$dev/vendor \
+			$dev_path/$dev/device
+		)
+
+		case $vendor in
+			1002) vendor_name="AMD/ATI";;
+			1022) vendor_name="AMD";;
+			10de) vendor_name="NVIDIA Corporation";;
+			12d2) vendor_name="NVidia/SGS Thomson";;
+			13b5) vendor_name="ARM";;
+			8086)
+				vendor_name="Intel Corporation"
+				# Probably Integrated
+				extra_sed="s/ (Processor|Controller)//g; s/Generation/Gen/"
+				;;
+		esac
+
+		full_name=$(sed -nE "
+/^${vendor}/ {
+	: loop; n
+	/^\t${device}/ {
+		s/^\t${device}\s+//
+		# Invert device name and code name
+		s/^(\w+) \[(.+)\]$/\2 (\1)/; ${extra_sed}
+		p; q
+	}
+	b loop
+}" \
+		$dev_data)
+
+		echo "$vendor_name $full_name"
+	done
+}
+
+
+# Run the thing
+IFS=$_new_IFS
+get_gpu_info $(list_devices)
+IFS=$_old_IFS
+
+# Internal GPU = iGPU / External GPU = discrete card
+# Prefer external gpu
+gpu="${gpu_ext:-$gpu_int}"

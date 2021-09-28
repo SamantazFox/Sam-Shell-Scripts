@@ -27,7 +27,12 @@ _new_IFS="
 . $mydir/distro_specs
 
 # Provides $gpu
-if [ -e /bin/glxinfo ] || [ -e /usr/bin/glxinfo ]
+if [ -d /sys/bus/pci/devices/ ]
+then
+	# Custom utility that enumerates PCIe devices
+	# and searches in pci.ids(5) for names
+	. $mydir/probes/gpu_sys
+elif [ -e /bin/glxinfo ] || [ -e /usr/bin/glxinfo ]
 then
 	# GLXinfo output, by Brian Paul
 	. $mydir/probes/gpu_glxinfo
