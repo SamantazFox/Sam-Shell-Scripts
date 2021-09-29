@@ -31,6 +31,10 @@ list_devices()
 			10de) vendor_name="NVIDIA Corporation";;
 			12d2) vendor_name="NVidia/SGS Thomson";;
 			13b5) vendor_name="ARM";;
+			1af4)
+				# QEMU Virtio device
+				vendor_name="Red Hat, Inc."
+				;;
 			8086)
 				vendor_name="Intel Corporation"
 				# Probably Integrated
