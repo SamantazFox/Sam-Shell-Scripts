@@ -1,0 +1,46 @@
+#!/bin/sh
+
+IFS=$_new_IFS
+
+get_cpu_info()
+{
+	cpu_cores_ps=$1
+	cpu_freq=$2
+	cpu_model=$3
+	cpu_sockets=$4
+	cpu_threads_pc=$5
+	cpu_vendor=$6
+}
+
+get_cpu_info $(lscpu | sort -bfd | sed -nE \
+	-e ':core
+		s/^Core\(s\) per socket:\s+([0-9]+)$/\1/p; t freq
+		n; b core' \
+	-e ':freq
+		s/^CPU max MHz:\s+([0-9]+).+$/\1/p; t model
+		s/^CPU MHz:\s+([0-9]+).+$/\1/p; t model
+		n; b freq' \
+	-e ':model
+		/^Model name/ {
+			s/( (APU|CPU|Processor).*)$//
+			s/^\s*Model name:\s+(.+)/\1/p; t sockets
+		}
+		n; b model' \
+	-e ':sockets
+		s/^Socket\(s\):\s+([0-9]+)$/\1/p; t threads
+		n; b sockets' \
+	-e ':threads
+		s/^Thread\(s\) per core:\s+([0-9]+)$/\1/p; t vendor
+		n; b threads' \
+	-e ':vendor
+		s/^Vendor ID:\s+([A-Za-z]+)$/\1/p; t end
+		n; b vendor' \
+	\
+	-e ':end; q'
+)
+
+
+cpu_cores=$(( $cpu_sockets * $cpu_cores_ps ))
+cpu_threads=$(( $cpu_cores * $cpu_threads_pc ))
+
+IFS=$_old_IFS

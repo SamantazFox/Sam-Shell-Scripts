@@ -23,8 +23,14 @@ _new_IFS="
 # Get OS details
 #
 
-# Provides $distro, $kernel, $mem_*_mib, $shell, $disks_*, $cpu_*
+# Provides $distro, $kernel, $mem_*_mib, $shell, $disks_*
 . $mydir/distro_specs
+
+# Provides $cpu_cores, $cpu_threads, $cpu_freq
+if [ -e /usr/bin/lscpu ]; then
+	# Use the output of 'lscpu', from util-linux
+	. $mydir/probes/cpu_lscpu
+fi
 
 # Provides $gpu
 if [ -d /sys/bus/pci/devices/ ]
