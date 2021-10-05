@@ -118,11 +118,12 @@ fi
 # Display logo and data
 #
 
-echo "${logo_0}"
-echo "${logo_1}${bg}OS:${n} ${distro}"
-echo "${logo_2}${bg}Kernel${n} ${kernel}"
-echo "${logo_3}${bg}Shell:${n} ${shell}"
-echo "${logo_4}${bg}Disk:${n} ${disks_used} / ${disks_total} [${disks_avail} free]"
-echo "${logo_5}${bg}CPU:${n} ${cpu_model} [${cpu_cores}C/${cpu_threads}T] @ ${cpu_freq}"
-echo "${logo_6}${bg}GPU:${n} ${gpu}"
-echo "${logo_7}${bg}RAM:${n} ${mem_used} / ${mem_total} [${mem_avail} free]"
+printf "${logo_0}
+${logo_1}${bg}OS:${n} ${distro}
+${logo_2}${bg}Kernel${n} ${kernel}
+${logo_3}${bg}Shell:${n} ${shell}
+${logo_4}${bg}Disk:${n} ${disks_used} / ${disks_total} [${disks_avail} free]
+${logo_5}${bg}CPU:${n} ${cpu_model} [${cpu_cores}C/${cpu_threads}T] @ ${cpu_freq}
+${logo_6}${bg}GPU:${n} ${gpu}
+${logo_7}${bg}RAM:${n} ${mem_used} / ${mem_total} [${mem_avail} free]
+"
