@@ -19,6 +19,25 @@ elif [ -e /etc/os-release ]; then
 # RedHat
 elif [ -e /etc/redhat-release ]; then distro=$(cat /etc/redhat-release)
 
+# Msys2 / Cygwin / Git for windows
+elif [ "$OS" = "Windows_NT" ]; then
+	# Get the kernel version and system here
+	ms_tmp=$(uname -s)
+	system=${ms_tmp%%_*}
+	kernel=${ms_tmp#*_}
+
+	case $kernel in
+		NT-11.0) ="11";; # to be confirmed
+		NT-10.0) ms_ver="10";;
+		NT-6.3)  ms_ver="8.1";;
+		NT-6.2)  ms_ver="8";;
+		NT-6.1)  ms_ver="7";;
+		NT-6.0)  ms_ver="Vista";;
+		NT-5.0)  ms_ver="XP";;
+	esac
+
+	distro="Microsoft Windows $ms_vers ($system)"
+
 # Fallback
 else
 	distro="Linux generic"
@@ -30,7 +49,9 @@ fi
 #
 
 # Kernel version
-kernel="$(uname -m) $(uname -sr)"
+if [ -z "$kernel" ]; then
+	kernel="$(uname -m) $(uname -sr)"
+fi
 
 
 # Memory informations
