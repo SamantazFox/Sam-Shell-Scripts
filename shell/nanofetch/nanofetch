@@ -76,6 +76,16 @@ n="${COLOR_NONE}";
 # Data reformatting
 #
 
+# CPU frequency (YYZ -> YYZ MHz / XYYZ -> X.YY Ghz)
+if [ ${#cpu_freq} -eq 4 ];
+then
+	cpu_freq_ghz=$(( $cpu_freq / 1000 ))
+	cpu_freq_rem=$(( $cpu_freq - ($cpu_freq_ghz*1000) ))
+	cpu_freq="${cpu_freq_ghz}.${cpu_freq_rem} GHz"
+else
+	cpu_freq="${cpu_freq} MHz"
+fi
+
 # Total memory installed, minus kernel and HW reserved
 if [ $mem_total_mib -ge 1536 ]
 then
