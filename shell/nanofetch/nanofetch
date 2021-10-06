@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/bin/sh
 
 # Get this script's dir in order to be able to
 # use relative paths
