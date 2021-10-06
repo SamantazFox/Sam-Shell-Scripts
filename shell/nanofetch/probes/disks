@@ -5,11 +5,13 @@ IFS=$_new_IFS
 # Get last line of 'df' (total disk usage)
 if [ $distro_type = "linux" ] || [ $distro_type = "win" ]; then
 
-	for disks_line in $(df -Ph --total --local -x tmpfs -x devtmpfs); do; done
+	for disks_line in $(df -Ph --total --local -x tmpfs -x devtmpfs)
+	do :; done
 
 elif [ $distro_type = "bsd" ]; then
 
-	for disks_line in $(df -l -h -c); do; done
+	for disks_line in $(df -l -h -c)
+	do :; done
 
 fi
 
