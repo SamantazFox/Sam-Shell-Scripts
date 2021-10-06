@@ -11,14 +11,6 @@ if [ -e /etc/lsb-release ]; then
 	. /etc/lsb-release
 	distro="$DISTRIB_ID $DISTRIB_RELEASE $DISTRIB_CODENAME"
 
-# Fedora / CentOS / Arch Linux / Manjaroo / *BSD
-elif [ -e /etc/os-release ]; then
-	. /etc/os-release
-	distro="${PRETTY_NAME:-$NAME}"
-
-	# Replace $distro_type only for *BSD
-	case "$NAME" in (*BSD*) distro_type="bsd";; esac
-
 # RedHat
 elif [ -e /etc/redhat-release ]; then distro=$(cat /etc/redhat-release)
 
@@ -41,6 +33,17 @@ elif [ "$OS" = "Windows_NT" ]; then
 
 	distro="Microsoft Windows $ms_ver ($system)"
 	distro_type="win"
+
+# Fedora / CentOS / Arch Linux / Manjaroo / *BSD
+#
+# Check that after windows environments because Msys happens
+# to have an /etc/os-release file.
+elif [ -e /etc/os-release ]; then
+	. /etc/os-release
+	distro="${PRETTY_NAME:-$NAME}"
+
+	# Replace $distro_type only for *BSD
+	case "$NAME" in (*BSD*) distro_type="bsd";; esac
 
 # Fallback
 else
