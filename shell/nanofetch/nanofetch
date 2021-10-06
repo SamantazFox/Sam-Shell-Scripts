@@ -23,7 +23,10 @@ _new_IFS="
 # Get OS details
 #
 
-# Provides $distro, $kernel, $mem_*_mib, $shell,
+# Provides $distro and $distro_type
+. $mydir/probes/distro
+
+# Provides $kernel, $mem_*_mib and $shell
 . $mydir/distro_specs
 
 # Provides $cpu_cores, $cpu_threads, $cpu_freq

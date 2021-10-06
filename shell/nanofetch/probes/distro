@@ -1,0 +1,48 @@
+#!/bin/sh
+
+
+# Default to linux distro type
+# Only windows and *BSD will replace that.
+distro_type="linux"
+
+
+# Ubuntu / Debian
+if [ -e /etc/lsb-release ]; then
+	. /etc/lsb-release
+	distro="$DISTRIB_ID $DISTRIB_RELEASE $DISTRIB_CODENAME"
+
+# Fedora / CentOS / Arch Linux / Manjaroo / *BSD
+elif [ -e /etc/os-release ]; then
+	. /etc/os-release
+	distro="${PRETTY_NAME:-$NAME}"
+
+	# Replace $distro_type only for *BSD
+	case "$NAME" in (*BSD*) distro_type="bsd";; esac
+
+# RedHat
+elif [ -e /etc/redhat-release ]; then distro=$(cat /etc/redhat-release)
+
+# Msys2 / Cygwin / Git for windows
+elif [ "$OS" = "Windows_NT" ]; then
+	# Get the kernel version and system here
+	ms_tmp=$(uname -s)
+	system=${ms_tmp%%_*}
+	kernel=${ms_tmp#*_}
+
+	case $kernel in
+		NT-11.0) ms_ver="11";; # to be confirmed
+		NT-10.0) ms_ver="10";;
+		NT-6.3)  ms_ver="8.1";;
+		NT-6.2)  ms_ver="8";;
+		NT-6.1)  ms_ver="7";;
+		NT-6.0)  ms_ver="Vista";;
+		NT-5.0)  ms_ver="XP";;
+	esac
+
+	distro="Microsoft Windows $ms_ver ($system)"
+	distro_type="win"
+
+# Fallback
+else
+	distro="Linux generic"
+fi
