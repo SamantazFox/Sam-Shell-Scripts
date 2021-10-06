@@ -117,7 +117,7 @@ then
 	mem_total_gib_i=$(( $mem_total_mib / 1024 ))
 	mem_total_gib_f=$(( ($mem_total_mib - ($mem_total_gib_i*1024)) * 1000 / 1024 ))
 
-	mem_total="${w}${mem_total_gib_i}.${mem_total_gib_f:0:2}${n} ${i}GiB${n}"
+	mem_total="${w}${mem_total_gib_i}.${mem_total_gib_f%?}${n} ${i}GiB${n}"
 else
 	mem_total="${w}${mem_total_mib}${n} ${i}MiB${n}"
 fi
@@ -129,7 +129,7 @@ then
 	mem_avail_gib_i=$(( $mem_avail_mib / 1024 ))
 	mem_avail_gib_f=$(( ($mem_avail_mib - ($mem_avail_gib_i*1024)) * 1000 / 1024 ))
 
-	mem_avail="${g}${mem_avail_gib_i}.${mem_avail_gib_f:0:2}${n} ${i}GiB${n}"
+	mem_avail="${g}${mem_avail_gib_i}.${mem_avail_gib_f%?}${n} ${i}GiB${n}"
 else
 	mem_avail="${g}${mem_avail_mib}${n} ${i}MiB${n}"
 fi
@@ -140,9 +140,8 @@ then
 	# Decimal GiB display shenanigans
 	mem_used_gib_i=$(( $mem_used_mib / 1024 ))
 	mem_used_gib_f=$(( ($mem_used_mib - ($mem_used_gib_i*1024)) * 1000 / 1024 ))
-	mem_used_gib=${mem_used_gib_i}.${mem_used_gib_f:0:2}
 
-	mem_used="${r}${mem_used_gib_i}.${mem_used_gib_f:0:2}${n} ${i}GiB${n}"
+	mem_used="${r}${mem_used_gib_i}.${mem_used_gib_f%?}${n} ${i}GiB${n}"
 else
 	mem_used="${r}${mem_used_mib}${n} ${i}MiB${n}"
 fi
