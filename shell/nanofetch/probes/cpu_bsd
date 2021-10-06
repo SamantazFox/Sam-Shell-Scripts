@@ -2,14 +2,13 @@
 
 get_cpu_info()
 {
-	cpu_name=$1
+	cpu_model=$1
 	cpu_cores=$2
 	cpu_threads=$3
-	cpu_freq=$4
 }
 
 IFS=$_new_IFS
 get_cpu_info $(sysctl -n hw.model hw.ncpu kern.smp.cpus)
 IFS=$_old_IFS
 
-cpu_freq=$(sed -n 's/^CPU:.+\((\d+).+MHz.+$/p' /var/run/dmesg.boot)
+cpu_freq=$(sed -nE 's/^CPU:.+\(([0-9]+).+MHz.+$/\1/p' /var/run/dmesg.boot)
