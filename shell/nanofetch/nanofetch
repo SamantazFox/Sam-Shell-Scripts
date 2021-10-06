@@ -80,6 +80,11 @@ fi
 # Random selection of logo to use
 #
 
+# Not really random, but the idea is only to get a
+# different icon on each load in shells that don't
+# provide the $RANDOM variable.
+if [ -z $RANDOM ]; then RANDOM=$(date '+%s'); fi
+
 case $(( $RANDOM % 8 )) in
 	0) . $mydir/logos/fox;;     # A small fox head logo
 	1) . $mydir/logos/floppy;;  # A floppy disk with randomized colors
