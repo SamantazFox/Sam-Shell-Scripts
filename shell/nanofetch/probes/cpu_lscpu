@@ -23,7 +23,7 @@ get_cpu_info $(lscpu | sort -bfd | sed -nE \
 	-e ':model
 		/^Model name/ {
 			s/( (APU|CPU|Processor).*)$//
-			s/^\s*Model name:\s+(.+)/\1/p; t sockets
+			s/^Model name:\s+(.+)/\1/p; t sockets
 		}
 		n; b model' \
 	-e ':sockets
