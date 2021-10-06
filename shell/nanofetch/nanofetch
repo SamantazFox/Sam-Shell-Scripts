@@ -32,7 +32,7 @@ _new_IFS="
 # Provides $mem_used_mib, $mem_avail_mib and $mem_total_mib
 . $mydir/probes/memory_$distro_type
 
-# Provides $cpu_cores, $cpu_threads, $cpu_freq
+# Provides $cpu_model, $cpu_cores, $cpu_threads, $cpu_freq
 if [ -e /usr/bin/lscpu ]
 then
 	# Use the output of 'lscpu', from util-linux
@@ -45,6 +45,12 @@ elif [ $distro_type = "bsd" ]
 then
 	# *BSD parser using 'sysctl' and some dmesg hackery
 	. $mydir/probes/cpu_bsd
+else
+	# Fallback values
+	cpu_model="Unknown"
+	cpu_cores='?'
+	cpu_threads='?'
+	cpu_freq='??'
 fi
 
 # Provides $gpu
@@ -57,9 +63,13 @@ elif [ -e /bin/glxinfo ] || [ -e /usr/bin/glxinfo ]
 then
 	# GLXinfo output, by Brian Paul
 	. $mydir/probes/gpu_glxinfo
-else
-	# Fallback to 'lscpci', from 'pciutils'
+elif [ -e /usr/bin/lspci ]
+then
+	# Use 'lscpci', from 'pciutils'
 	. $mydir/probes/gpu_lspci
+else
+	# Fallback, set to unknown
+	gpu="Unknown"
 fi
 
 # Provides $disks_avail, $disks_used and $disks_total
