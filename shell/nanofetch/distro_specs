@@ -35,7 +35,7 @@ elif [ "$OS" = "Windows_NT" ]; then
 	kernel=${ms_tmp#*_}
 
 	case $kernel in
-		NT-11.0) ="11";; # to be confirmed
+		NT-11.0) ms_ver="11";; # to be confirmed
 		NT-10.0) ms_ver="10";;
 		NT-6.3)  ms_ver="8.1";;
 		NT-6.2)  ms_ver="8";;
@@ -44,7 +44,7 @@ elif [ "$OS" = "Windows_NT" ]; then
 		NT-5.0)  ms_ver="XP";;
 	esac
 
-	distro="Microsoft Windows $ms_vers ($system)"
+	distro="Microsoft Windows $ms_ver ($system)"
 	distro_type="win"
 
 # Fallback
