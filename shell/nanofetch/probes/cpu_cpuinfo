@@ -1,0 +1,38 @@
+#!/bin/sh
+
+IFS=$_new_IFS
+
+
+get_cpu_info()
+{
+	cpu_vendor=$1
+	cpu_model=$2
+	cpu_freq=$3
+	cpu_cores=$4
+}
+
+get_cpu_info $(sed -nE \
+	-e ':vendor
+		s/^vendor_id\s+:\s+([A-Za-z]+)$/\1/p; t model
+		n; b vendor' \
+	-e ':model
+		/^model name/ {
+			s/( (APU|CPU|Processor).*)$//
+			s/^model name\s+:\s+(.+)/\1/p; t freq
+		}
+		n; b model' \
+	-e ':freq
+		s/^cpu MHz\s+:\s+([0-9]+).+$/\1/p; t core
+		n; b freq' \
+	-e ':core
+		s/^cpu cores?\s+:\s+([0-9]+)$/\1/p; t end
+		n; b core' \
+	-e ':end; q' \
+	/proc/cpuinfo
+)
+
+
+cpu_threads=$cpu_cores
+
+
+IFS=$_old_IFS
