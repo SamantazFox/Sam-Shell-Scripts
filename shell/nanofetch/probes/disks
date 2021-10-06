@@ -1,0 +1,30 @@
+#!/bin/sh
+
+IFS=$_new_IFS
+
+# Get last line of 'df' (total disk usage)
+if [ $distro_type = "linux" ] || [ $distro_type = "win" ]; then
+
+	for disks_line in $(df -Ph --total --local -x tmpfs -x devtmpfs); do; done
+
+elif [ $distro_type = "bsd" ]; then
+
+	for disks_line in $(df -l -h -c); do; done
+
+fi
+
+IFS=$_old_IFS
+
+
+# Extract separate infos
+get_disk_info()
+{
+	disks_total=$2
+	disks_used=$3
+	disks_avail=$4
+}
+
+# We need eval because for some reason $disks_line is
+# passed as a quoted string, which then can't be split
+# as a list of arguments.
+eval "get_disk_info $disks_line"

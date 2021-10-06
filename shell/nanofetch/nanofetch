@@ -23,7 +23,7 @@ _new_IFS="
 # Get OS details
 #
 
-# Provides $distro, $kernel, $mem_*_mib, $shell, $disks_*
+# Provides $distro, $kernel, $mem_*_mib, $shell,
 . $mydir/distro_specs
 
 # Provides $cpu_cores, $cpu_threads, $cpu_freq
@@ -46,6 +46,9 @@ else
 	# Fallback to 'lscpci', from 'pciutils'
 	. $mydir/probes/gpu_lspci
 fi
+
+# Provides $disks_avail, $disks_used and $disks_total
+. $mydir/probes/disks
 
 
 #

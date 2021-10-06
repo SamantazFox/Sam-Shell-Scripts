@@ -93,9 +93,3 @@ case $SHELL in
 	*bash) shell=$($SHELL --version | sed -E '1s/^(GNU [Bb]ash), version ([0-9.]+).*$/\1 \2/; q');;
 	*)     shell="Unknown";;
 esac
-
-
-disks_raw=( $(df -Ph --total --local -x tmpfs -x devtmpfs) )
-disks_total=${disks_raw[-5]}
-disks_used=${disks_raw[-4]}
-disks_avail=${disks_raw[-3]}
