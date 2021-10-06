@@ -26,8 +26,11 @@ _new_IFS="
 # Provides $distro and $distro_type
 . $mydir/probes/distro
 
-# Provides $kernel, $mem_*_mib and $shell
+# Provides $kernel and $shell
 . $mydir/distro_specs
+
+# Provides $mem_used_mib, $mem_avail_mib and $mem_total_mib
+. $mydir/probes/memory_$distro_type
 
 # Provides $cpu_cores, $cpu_threads, $cpu_freq
 if [ -e /usr/bin/lscpu ]
@@ -38,6 +41,10 @@ elif [ -e /proc/cpuinfo ]
 then
 	# Parse /proc/cpuinfo
 	. $mydir/probes/cpu_cpuinfo
+elif [ $distro_type = "bsd" ]
+then
+	# *BSD parser using 'sysctl' and some dmesg hackery
+	. $mydir/probes/cpu_bsd
 fi
 
 # Provides $gpu

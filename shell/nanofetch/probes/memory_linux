@@ -1,0 +1,24 @@
+#!/bin/sh
+
+get_mem_info()
+{
+	mem_total_kib=$1
+	mem_avail_kib=$2
+}
+
+
+IFS=$_new_IFS
+
+get_mem_info $(sed -nE '
+	s/MemTotal:\s+([0-9]+) kB/\1/p
+	s/MemAvailable:\s+([0-9]+) kB/\1/p
+' /proc/meminfo)
+
+IFS=$_old_IFS
+
+
+mem_total_mib=$(( $mem_total_kib / 1024 ))
+mem_avail_mib=$(( $mem_avail_kib / 1024 ))
+
+mem_used_kib=$(( $mem_total_kib - $mem_avail_kib ))
+mem_used_mib=$(( $mem_used_kib / 1024 ))

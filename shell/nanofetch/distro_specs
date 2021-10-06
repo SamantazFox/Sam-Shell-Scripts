@@ -1,42 +1,12 @@
 #!/bin/sh
 
-IFS=$_new_IFS
-
-#
-# Kernel / Memory / CPU details
-#
 
 # Kernel version
 if [ -z "$kernel" ]; then
 	kernel="$(uname -m) $(uname -sr)"
 fi
 
-
-# Memory informations
-get_mem_info()
-{
-	mem_total_kib=$1
-	mem_avail_kib=$2
-}
-
-get_mem_info $(sed -nE '
-	s/MemTotal:\s+([0-9]+) kB/\1/p
-	s/MemAvailable:\s+([0-9]+) kB/\1/p
-' /proc/meminfo)
-
-mem_total_mib=$(( $mem_total_kib / 1024 ))
-mem_avail_mib=$(( $mem_avail_kib / 1024 ))
-
-mem_used_kib=$(( $mem_total_kib - $mem_avail_kib ))
-mem_used_mib=$(( $mem_used_kib / 1024 ))
-
-IFS=$_old_IFS
-
-
-#
-# Other
-#
-
+# shell
 case $SHELL in
 	*zsh)  shell=$($SHELL --version | sed -E 's/(\(.*\))//');;
 	*bash) shell=$($SHELL --version | sed -E '1s/^(GNU [Bb]ash), version ([0-9.]+).*$/\1 \2/; q');;
