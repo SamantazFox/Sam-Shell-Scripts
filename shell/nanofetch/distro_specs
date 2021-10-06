@@ -6,15 +6,23 @@ IFS=$_new_IFS
 # Distro name
 #
 
+# Default to linux distro type
+# Only windows and *BSD will replace that.
+distro_type="linux"
+
+
 # Ubuntu / Debian
 if [ -e /etc/lsb-release ]; then
 	. /etc/lsb-release
 	distro="$DISTRIB_ID $DISTRIB_RELEASE $DISTRIB_CODENAME"
 
-# Fedora / CentOS / Arch Linux / Manjaroo
+# Fedora / CentOS / Arch Linux / Manjaroo / *BSD
 elif [ -e /etc/os-release ]; then
 	. /etc/os-release
 	distro="${PRETTY_NAME:-$NAME}"
+
+	# Replace $distro_type only for *BSD
+	case "$NAME" in (*BSD*) distro_type="bsd";; esac
 
 # RedHat
 elif [ -e /etc/redhat-release ]; then distro=$(cat /etc/redhat-release)
@@ -37,6 +45,7 @@ elif [ "$OS" = "Windows_NT" ]; then
 	esac
 
 	distro="Microsoft Windows $ms_vers ($system)"
+	distro_type="win"
 
 # Fallback
 else
