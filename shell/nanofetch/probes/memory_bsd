@@ -3,14 +3,39 @@
 # Memory informations
 get_mem_info()
 {
-	mem_total_kb=$1 # hw.realmem
-	mem_free_kb=$2  # hw.realmem
-	mem_avail_kb=$3 # hw.physmem
+	mem_total_b=$1
+	pg_size=$2
+	mem_inactive_pg=$3
+	mem_cache_pg=$4
+	mem_free_pg=$5
 }
 
-get_mem_info $(sysctl -n hw.realmem hw.physmem)
+IFS=$_new_IFS
 
+get_mem_info $(sysctl -n \
+	hw.physmem \
+	hw.pagesize \
+	vm.stats.vm.v_inactive_count \
+	vm.stats.vm.v_cache_count \
+	vm.stats.vm.v_free_count
+)
 
-mem_total_mb=$(dc -e "$mem_total_kb 1024/ps.")
-mem_free_mb=$(dc -e "$mem_free_kb 1024/ps.")
-mem_avail_mb=$(dc -e "$mem_avail_kb 1024/ps.")
+IFS=$_old_IFS
+
+# Intermediary free pages count
+mem_avail_pg=$(( $mem_inactive_pg + $mem_cache_pg + $mem_free_pg ))
+mem_avail_b=$(( $mem_avail_pg * $pg_size ))
+
+# kib and Mib conversion
+mem_total_kib=$(( $mem_total_b   / 1024 ))
+mem_total_mib=$(( $mem_total_kib / 1024 ))
+
+mem_avail_kib=$(( $mem_avail_b   / 1024 ))
+mem_avail_mib=$(( $mem_avail_kib / 1024 ))
+
+# Used memory, cumputed from the two previous
+mem_used_kib=$(( $mem_total_kib - $mem_avail_kib ))
+mem_used_mib=$(( $mem_used_kib / 1024 ))
+
+# Cleaning
+unset pg_size mem_inactive_pg mem_cache_pg mem_free_pg
