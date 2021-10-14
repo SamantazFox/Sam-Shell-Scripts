@@ -1,0 +1,14 @@
+#!/bin/sh
+
+get_cpu_info()
+{
+	cpu_model=$1
+	cpu_cores='?'
+	cpu_threads=$2
+	cpu_freq=$3
+}
+
+IFS=$_new_IFS
+get_cpu_info $(sysctl -n hw.model hw.ncpu hw.cpuspeed)
+IFS=$_old_IFS
+

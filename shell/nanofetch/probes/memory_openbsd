@@ -1,0 +1,44 @@
+#!/bin/sh
+
+# Memory informations
+get_mem_info1()
+{
+	mem_total_b=$1
+	pg_size=$2
+}
+
+get_mem_info2()
+{
+	mem_managed_pg=$1
+	mem_free_pg=$2
+	#mem_active_pg=$3
+	#mem_inactive_pg=$4
+}
+
+IFS=$_new_IFS
+
+get_mem_info1 $(sysctl -n hw.physmem hw.pagesize)
+get_mem_info2 $(vmstat -s | sed -nE \
+	'/pages (managed|free)$/ s/^[ ]+([0-9]+).+$/\1/p'
+#	'/pages (managed|free|(in)?active)$/ s/^[ ]+([0-9]+).+$/\1/p'
+)
+
+IFS=$_old_IFS
+
+# Intermediary free pages count
+#mem_avail_pg=$(( $mem_inactive_pg $mem_free_pg ))
+mem_avail_b=$(( $mem_free_pg * $pg_size ))
+
+# kib and Mib conversion
+mem_total_kib=$(( $mem_total_b   / 1024 ))
+mem_total_mib=$(( $mem_total_kib / 1024 ))
+
+mem_avail_kib=$(( $mem_avail_b   / 1024 ))
+mem_avail_mib=$(( $mem_avail_kib / 1024 ))
+
+# Used memory, cumputed from the two previous
+mem_used_kib=$(( $mem_total_kib - $mem_avail_kib ))
+mem_used_mib=$(( $mem_used_kib / 1024 ))
+
+# Cleaning
+unset pg_size mem_inactive_pg mem_cache_pg mem_free_pg

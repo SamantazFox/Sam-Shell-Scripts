@@ -44,8 +44,12 @@ then
 	. $mydir/probes/cpu_cpuinfo
 elif [ $distro_type = "bsd" ]
 then
-	# *BSD parser using 'sysctl' and some dmesg hackery
+	# Free/NetBSD parser using 'sysctl' and some dmesg hackery
 	. $mydir/probes/cpu_bsd
+elif [ $distro_type = "openbsd" ]
+then
+	# OpenBSD parser using 'sysctl' and 'vmstat'
+	. $mydir/probes/cpu_openbsd
 else
 	# Fallback values
 	cpu_model="Unknown"

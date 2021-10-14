@@ -34,7 +34,7 @@ elif [ "$OS" = "Windows_NT" ]; then
 	distro="Microsoft Windows $ms_ver ($system)"
 	distro_type="win"
 
-# Fedora / CentOS / Arch Linux / Manjaroo / *BSD
+# Fedora / CentOS / RHEL / Arch Linux / Manjaroo / Free/NetBSD
 #
 # Check that after windows environments because Msys happens
 # to have an /etc/os-release file.
@@ -44,6 +44,12 @@ elif [ -e /etc/os-release ]; then
 
 	# Replace $distro_type only for *BSD
 	case "$NAME" in (*BSD*) distro_type="bsd";; esac
+
+# OpenBSD
+# Heuristics on files available in /etc
+elif [ -f /etc/myname ] && [ -f /etc/mtree/special ]; then
+	distro=$(uname -sr)
+	distro_type="openbsd"
 
 # Fallback
 else
