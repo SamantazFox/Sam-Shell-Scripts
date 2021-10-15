@@ -173,7 +173,7 @@ fi
 
 printf "${logo_0}
 ${logo_1}${bg}OS:${n} ${distro}
-${logo_2}${bg}Kernel${n} ${kernel}
+${logo_2}${bg}Kernel:${n} ${kernel}
 ${logo_3}${bg}Shell:${n} ${shell}
 ${logo_4}${bg}Disk:${n} ${disks_used} / ${disks_total} [${disks_avail} free]
 ${logo_5}${bg}CPU:${n} ${cpu_model} [${cpu_cores}C/${cpu_threads}T] @ ${cpu_freq}
