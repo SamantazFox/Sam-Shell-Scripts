@@ -2,8 +2,12 @@
 .git
 .gitignore
 
-# Accept only content of scripts.d/, shell/ and admin/
+# Accept only content in a few folders
 **/
+
+!nanofetch/
+!nanofetch/*
+!nanofetch/**
 
 !scripts.d/
 !scripts.d/*

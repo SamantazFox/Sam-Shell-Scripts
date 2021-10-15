@@ -5,7 +5,7 @@
 mydir=${0%/*}
 
 # Import color definitions
-colors_file=$mydir/../colors/$TERM
+colors_file=$mydir/../shell/colors/$TERM
 if [ -f $colors_file ]; then . $colors_file; fi
 
 
