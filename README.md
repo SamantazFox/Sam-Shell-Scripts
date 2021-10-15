@@ -7,6 +7,9 @@ Some useful scripts I use on a more-or-less daily basis.
 Warning
 -------
 
+The Readme below **does NOT** apply for `nanofetch`, my fast hardware listing
+utility. [`nanofetch` has its own README.md](nanofetch/README.md).
+
 These scripts have been tested on `bash` and `zsh`. There is no guarantee that
 they will be compatible other shells. I'm trying my best, thought, and
 contributions are welcome!
