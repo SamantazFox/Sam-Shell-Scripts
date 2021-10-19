@@ -78,7 +78,7 @@ performance ones, which sometimes require tricky shell magic.
 | Name      | Comment |
 | --------- | --------|
 | FreeBSD   | almost complete. GPU not working |
-| NetBSD    | Not tested |
+| NetBSD    | OS, Kernel and RAM works. That's all |
 | OpenBSD   | partial. GPU and disks not working |
 
 **Windows:**
