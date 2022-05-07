@@ -29,6 +29,10 @@ list_devices()
 			1002) vendor_name="AMD/ATI";;
 			1022) vendor_name="AMD";;
 			10de) vendor_name="NVIDIA Corporation";;
+			1234)
+				# QEMU Virtual Video Controller
+				vendor_name="QEMU"
+				;;
 			12d2) vendor_name="NVidia/SGS Thomson";;
 			13b5) vendor_name="ARM";;
 			1af4)
@@ -40,9 +44,18 @@ list_devices()
 				# Probably Integrated
 				extra_sed="s/ (Processor|Controller)//g; s/Generation/Gen/"
 				;;
+			*) vendor_name="Unknown vendor";;
 		esac
 
-		full_name=$(sed -nE "
+		# Workaround for QEMU '-vga std' device.
+		if [ $vendor = "1234" ] && [ $device = "1111" ]; then
+			full_name="Virtual Video Controller"
+
+		elif [ -z "$dev_data" ]; then
+			full_name="Unknown"
+
+		else
+			full_name=$(sed -nE "
 /^${vendor}/ {
 	: loop; n
 	/^\t${device}/ {
@@ -53,7 +66,8 @@ list_devices()
 	}
 	b loop
 }" \
-		$dev_data)
+			$dev_data)
+		fi
 
 		echo "$vendor_name $full_name"
 	done
